@@ -1,38 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/screens/announcement_screen.dart';
-import 'package:myapp/screens/dashboard_screen.dart';
-import 'package:myapp/screens/login_screen.dart';
-import 'package:myapp/screens/profile_screen.dart';
-import 'package:myapp/screens/notification_screen.dart';
+import 'screens/announcement_screen.dart';
+import 'screens/dashboard_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/notification_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const DeSuung());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class DeSuung extends StatelessWidget {
+  const DeSuung({super.key});
 
-  // This widget is the root of your application.
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
         useMaterial3: true,
       ),
-      initialRoute: '/login',
-      routes: {
-        '/login': (context) => LoginScreen(),
-        '/dashboard': (context) => DashboardScreen(),
-        '/profile': (context) => ProfileScreen(),
-        '/announcement':(context) => AnnouncementScreen(),
-        '/notification': (context) => NotificationScreen(),
-      },
+      home: SplashScreen(),
     );
   }
-}
-
+} 
 
 
 class MainScreen extends StatefulWidget {
