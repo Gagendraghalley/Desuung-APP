@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -308,6 +310,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           filled: true,
                           fillColor: Colors.white70,
                         ),
+                         validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          if (!value.contains('@')) {
+                            return 'Please enter a valid email';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: 24),
                       ElevatedButton(

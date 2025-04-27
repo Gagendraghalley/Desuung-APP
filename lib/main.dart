@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/announcement_screen.dart';
 import 'screens/dashboard_screen.dart';
-import 'screens/login_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/notification_screen.dart';
 import 'screens/splash_screen.dart';
@@ -17,6 +16,7 @@ class DeSuung extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
@@ -29,7 +29,7 @@ class DeSuung extends StatelessWidget {
 
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({Key? key}) : super(key: key);
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -37,7 +37,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     DashboardScreen(),
     AnnouncementScreen(),
     NotificationScreen(),

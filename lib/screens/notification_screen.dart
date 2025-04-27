@@ -1,66 +1,158 @@
 import 'package:flutter/material.dart';
 
 class NotificationScreen extends StatelessWidget {
-  final List<Map<String, String>> notifications = [
-    {
-      'title': 'New Message',
-      'description': 'You have a new message from John Doe.',
-    },
-    {
-      'title': 'Event Reminder',
-      'description': 'Reminder: Meeting with the team at 2:00 PM.',
-    },
-    {
-      'title': 'System Update',
-      'description': 'A new system update is available. Please update soon.',
-    },
-        {
-      'title': 'New Message',
-      'description': 'You have a new message from John Doe.',
-    },
-    {
-      'title': 'Event Reminder',
-      'description': 'Reminder: Meeting with the team at 2:00 PM.',
-    },
-    {
-      'title': 'System Update',
-      'description': 'A new system update is available. Please update soon.',
-    },
-        {
-      'title': 'New Message',
-      'description': 'You have a new message from John Doe.',
-    },
-    {
-      'title': 'Event Reminder',
-      'description': 'Reminder: Meeting with the team at 2:00 PM.',
-    },
-    {
-      'title': 'System Update',
-      'description': 'A new system update is available. Please update soon.',
-    },
+  final List<NotificationItem> notifications = [
+    NotificationItem(
+      title: 'New Message',
+      description: 'You have a new message from John Doe.',
+      time: '10:30 AM',
+      isRead: false,
+    ),
+    NotificationItem(
+      title: 'Event Reminder',
+      description: 'Reminder: Meeting with the team at 2:00 PM.',
+      time: 'Yesterday',
+      isRead: true,
+    ),
+    NotificationItem(
+      title: 'System Update',
+      description: 'A new system update is available. Please update soon.',
+      time: 'Mar 15',
+      isRead: true,
+    ),
   ];
+
+  NotificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: const Text('Notifications'),
       ),
-      body: ListView.builder(
-        itemCount: notifications.length,
-        itemBuilder: (context, index) {
-          return Card(
-            margin: EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text(
-                notifications[index]['title']!,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text(notifications[index]['description']!),
-            ),
-          );
-        },
-      ),
+      body: NotificationListView(notifications: notifications),
     );
+  }
+}
+
+class NotificationItem {
+  final String title;
+  final String description;
+  final String time;
+  final bool isRead;
+
+  const NotificationItem({
+    required this.title,
+    required this.description,
+    required this.time,
+    required this.isRead,
+  });
+}
+
+class NotificationListView extends StatelessWidget {
+  final List<NotificationItem> notifications;
+
+  const NotificationListView({
+    super.key,
+    required this.notifications,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(8.0),
+      itemCount: notifications.length,
+      separatorBuilder: (context, index) => const Divider(height: 1),
+      itemBuilder: (context, index) {
+        final notification = notifications[index];
+        return NotificationTile(
+          notification: notification,
+          onTap: () {
+            // Handle notification tap
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Selected: ${notification.title}')),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class NotificationTile extends StatelessWidget {
+  final NotificationItem notification;
+  final VoidCallback onTap;
+
+  const NotificationTile({
+    super.key,
+    required this.notification,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 8.0,
+      ),
+      leading: CircleAvatar(
+        backgroundColor: notification.isRead
+            ? Colors.grey[300]
+            : Theme.of(context).colorScheme.primary,
+        child: Icon(
+          _getNotificationIcon(notification.title),
+          color: notification.isRead ? Colors.grey : Colors.white,
+          size: 20,
+        ),
+      ),
+      title: Text(
+        notification.title,
+        style: TextStyle(
+          fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+        ),
+      ),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(notification.description),
+          const SizedBox(height: 4),
+          Text(
+            notification.time,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey,
+                ),
+          ),
+        ],
+      ),
+      trailing: notification.isRead
+          ? null
+          : Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                shape: BoxShape.circle,
+              ),
+            ),
+      onTap: onTap,
+    );
+  }
+
+  IconData _getNotificationIcon(String title) {
+    switch (title) {
+      case 'New Message':
+        return Icons.message;
+      case 'Event Reminder':
+        return Icons.event;
+      case 'System Update':
+        return Icons.system_update;
+      case 'Payment Received':
+        return Icons.payment;
+      case 'Account Security':
+        return Icons.security;
+      default:
+        return Icons.notifications;
+    }
   }
 }

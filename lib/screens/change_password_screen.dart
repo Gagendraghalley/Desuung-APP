@@ -12,23 +12,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _currentPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmNewPasswordController = TextEditingController();
-  bool _passwordsMatch = true;
-
-  void _changePassword() {
-    if (_formKey.currentState!.validate()) {
-       _formKey.currentState!.save();
-    }
-  }
-
-  void _clearForm() {
-    _formKey.currentState?.reset();
-    _currentPasswordController.clear();
-    _newPasswordController.clear();
-    _confirmNewPasswordController.clear();
-    setState(() {
-      _passwordsMatch = true;
-    });
-  }
+  bool _obscureCurrentPassword = true;
+  bool _obscureNewPassword = true;
+  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
@@ -36,6 +22,40 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     _newPasswordController.dispose();
     _confirmNewPasswordController.dispose();
     super.dispose();
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      // Implement your password change logic here
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password changed successfully')),
+      );
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _resetForm() {
+    _formKey.currentState?.reset();
+    _currentPasswordController.clear();
+    _newPasswordController.clear();
+    _confirmNewPasswordController.clear();
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a password';
+    }
+    if (value.length < 8) {
+      return 'Password must be at least 8 characters';
+    }
+    return null;
+  }
+
+  String? _validatePasswordMatch(String? value) {
+    if (value != _newPasswordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
   }
 
   @override
@@ -48,94 +68,91 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         ),
         title: const Text('Change Password'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-                TextField(
-                  controller: _currentPasswordController,
-                  obscureText: true,
-                  autocorrect: false,
-                  enableSuggestions: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Old Password',
-                    hintText: 'Enter your old password',
-                    fillColor: Colors.white70,
-                  border: OutlineInputBorder(),
+              TextFormField(
+                controller: _currentPasswordController,
+                obscureText: _obscureCurrentPassword,
+                decoration: InputDecoration(
+                  labelText: 'Current Password',
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureCurrentPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureCurrentPassword = !_obscureCurrentPassword;
+                      });
+                    },
+                  ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your current password';
-                  }
-                  return null;
-                },
+                validator: _validatePassword,
+                textInputAction: TextInputAction.next,
               ),
-
               const SizedBox(height: 16),
-              TextField(
+              TextFormField(
                 controller: _newPasswordController,
-                autocorrect: false,
-                enableSuggestions: false,
-                decoration: const InputDecoration(
+                obscureText: _obscureNewPassword,
+                decoration: InputDecoration(
                   labelText: 'New Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureNewPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureNewPassword = !_obscureNewPassword;
+                      });
+                    },
+                  ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your new password';
-                  }
-                  return null;
-                },
+                validator: _validatePassword,
+                textInputAction: TextInputAction.next,
               ),
-
               const SizedBox(height: 16),
-              TextField(
+              TextFormField(
                 controller: _confirmNewPasswordController,
-                autocorrect: false,
-                enableSuggestions: false,
-                decoration: const InputDecoration(
+                obscureText: _obscureConfirmPassword,
+                decoration: InputDecoration(
                   labelText: 'Confirm New Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureConfirmPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    },
+                  ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please confirm your new password';
-                  }
-                  if (value != _newPasswordController.text) {
-                    setState(() {
-                      _passwordsMatch = false;
-                    });
-                    return 'Passwords do not match';
-                  } else {
-                    setState(() {
-                      _passwordsMatch = true;
-                    });
-                  }
-                  return null;
-                },
+                validator: _validatePasswordMatch,
+                textInputAction: TextInputAction.done,
               ),
-              const SizedBox(height: 8),
-              if (!_passwordsMatch)
-                const Text(
-                  'Passwords do not match',
-                  style: TextStyle(color: Colors.red),
-                ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: (_currentPasswordController.text.isEmpty ||
-                        _newPasswordController.text.isEmpty ||
-                        _confirmNewPasswordController.text.isEmpty || !_passwordsMatch)
-                    ? null
-                    : _changePassword,
-                child: const Text('Save Password'),
+                onPressed: _submitForm,
+                child: const Text('Save Changes'),
               ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                  onPressed: _clearForm,
-                  child: const Text('Clear form')
-              )
+              const SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: _resetForm,
+                child: const Text('Reset Form'),
+              ),
             ],
           ),
         ),

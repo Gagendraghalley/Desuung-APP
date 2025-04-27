@@ -5,6 +5,8 @@ import 'profile_screen.dart';
 import 'notification_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
+  const DashboardScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,9 +159,9 @@ class DashboardScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.add, color: Colors.white),
         backgroundColor: Colors.blue[800],
         elevation: 4,
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }
