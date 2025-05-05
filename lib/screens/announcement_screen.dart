@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
 import 'package:intl/intl.dart';
 
-import '../config/app_constants.dart';
 import '../config/theme.dart';
+import '../config/app_constants.dart';
 class AnnouncementScreen extends StatefulWidget {
   const AnnouncementScreen({super.key});
 
@@ -37,7 +37,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
       title: 'System Maintenance',
       description: 'Our system will undergo maintenance on the coming Sunday. Access might be limited during this period.',
       date: DateTime.now().subtract(Duration(days: 7)),
-    ), 
+    ),
   ];
 
   @override
@@ -54,7 +54,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
             itemBuilder: (context, index) {
               final announcement = announcements[index];
               return _buildAnnouncementCard(announcement);
-            },
+            }),
         ),
       ),
     );
@@ -88,4 +88,3 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
       ),
     );
   }
-}

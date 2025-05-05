@@ -15,10 +15,10 @@ class AppTheme {
       secondary: _secondaryColor,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: _primaryColor,
-      foregroundColor: _darkTextColor,
+      backgroundColor: AppTheme._primaryColor,
+      foregroundColor: AppTheme._darkTextColor,
       titleTextStyle: TextStyle(
-          color: _darkTextColor,
+          color: AppTheme._darkTextColor,
           fontSize: 20,
           fontFamily: 'Roboto',
           fontWeight: FontWeight.w500),
@@ -26,9 +26,8 @@ class AppTheme {
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: _primaryColor,
       selectedItemColor: _darkTextColor,
-      unselectedItemColor: _darkTextColor,
-          type: BottomNavigationBarType.fixed,
-      
+      unselectedItemColor: _lightGreyColor,
+      type: BottomNavigationBarType.fixed,
     ),
   );
 

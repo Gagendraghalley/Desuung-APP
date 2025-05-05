@@ -6,18 +6,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     required this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      
       title: Text(
         title,
         style: GoogleFonts.roboto(
           fontSize: 22,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
       ),
@@ -26,12 +27,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: Icon(
-           Icons.notifications,
-           color: Theme.of(context).colorScheme.background,
-          
+            Icons.notifications,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
           onPressed: () {
-            print("Notification button pressed");
+            print("${MenuName.notification.name} button pressed");
           },
         ),
         IconButton(
@@ -43,8 +43,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               size: 28,
             ),
           ),
-          padding: const EdgeInsets.only(right: 10),
-          onPressed: () {
+          padding: const EdgeInsets.only(right: 20),
+           onPressed: () {
             print("profile icon pressed");
           },
         ),
