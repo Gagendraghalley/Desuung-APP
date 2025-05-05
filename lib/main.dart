@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'screens/dashboard_screen.dart';
 
 
@@ -13,27 +14,29 @@ class DeSuung extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.orange,
-          brightness: Brightness.light,
-          // Optional: Customize specific colors
-          primary: Colors.orange.shade800,
-          secondary: Colors.orange.shade600,
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.light(
+            primary: Colors.orange,
+            background: Colors.orange.shade100,
+            onPrimary: Colors.white,
+          ),
+          appBarTheme: AppBarTheme(
+            systemOverlayStyle: SystemUiOverlayStyle.light,
+            backgroundColor: Colors.orange.shade800,
+            foregroundColor: Colors.white,
+          ),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: Colors.orange.shade800,
+            selectedItemColor: Colors.orange,
+            unselectedItemColor: Colors.grey,
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+          ),
+          useMaterial3: true,
         ),
-        useMaterial3: true,
-        // Additional orange-themed customizations
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.orange.shade800,
-          foregroundColor: Colors.white,
-        ),
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: Colors.orange.shade600,
-        ),
-      ),
-      home: DashboardScreen(),
+        home: DashboardScreen(),
     );
   }
 } 
@@ -47,17 +50,18 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
-  static final List<Widget> _widgetOptions = <Widget>[
-    DashboardScreen(),
-  ];
 
+  int _selectedIndex = 0;
+  static final List<Widget> _widgetOptions = <Widget>[DashboardScreen(),];
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-
   @override
-  Widget build(BuildContext context) { return Scaffold(body: _widgetOptions.first,); }
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: _widgetOptions.first,
+    );
+  }
 }
