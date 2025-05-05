@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
+import '../widgets/empty_screen.dart';
 import '../widgets/custom_app_bar.dart';
 import 'announcement_screen.dart';
 import 'notification_screen.dart';
+import 'profile_screen.dart';
 import 'settings_screen.dart';
 
 import '../config/app_constants.dart';
@@ -45,30 +47,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
     },
   ];
 
-  final List<Map<String, dynamic>> _widgetOptions = <Map<String, dynamic>>[
-    {'activities': []},
+  final List<Widget> _widgetOptions = <Widget>[
+    EmptyScreen(),
+    AnnouncementScreen(),
+    NotificationScreen(),
+    ProfileScreen(),
+    SettingsScreen(),
   ];
-
-  Widget _buildActivityGrid(List<Map<String, dynamic>> activities) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.5,
-        ),
-        itemCount: activities.length,
-        itemBuilder: (context, index) => _buildCard(activities[index]),
-      ),
-    );
+  
+  void _logOut() {
+    print("Logout");
   }
 
   List<Widget> _buildWidgetOptions() {
-    return <Widget>[
-      _buildActivityGrid(_activities),
-    ];
+    return _widgetOptions;
+  }
+  
+   Widget _buildActivityGrid(List<Map<String, dynamic>> activities) {
+    return const Center(child: Text('Empty screen'),);
+    // return Container(
+    //   padding: const EdgeInsets.all(16.0),
+    //   child: GridView.builder(
+    //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    //       crossAxisCount: 2,
+    //       crossAxisSpacing: 16,
+    //       mainAxisSpacing: 16,
+    //       childAspectRatio: 1.5,
+    //     ),
+    //     itemCount: activities.length,
+    //     itemBuilder: (context, index) => _buildCard(activities[index]),
+    //   ),
+    // );
   }
 
   void _onItemTapped(int index) {
@@ -145,6 +154,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 },
               ),
               const Divider(),
+              _createDrawerItem(
+                icon: Icons.logout,
+                text: MenuName.logout.value,
+                onTap: () {
+                  _logOut();
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),
@@ -166,6 +183,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 icon: Icon(Icons.settings), label: 'Settings'),
           ],
           currentIndex: _currentPageIndex,
+           selectedFontSize: 12,
+          unselectedFontSize: 10,
           onTap: _onItemTapped,
         ));
     
