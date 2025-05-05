@@ -1,12 +1,46 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
 import 'announcement_screen.dart';
 import 'profile_screen.dart';
 import 'notification_screen.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  int _selectedIndex = 0;
+  static  final List<Widget> _widgetOptions = <Widget>[
+        const Center(
+          child: Text(
+            'Home Screen',
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+        ),
+         ProfileScreen(),
+    const Center(
+          child: Text(
+            'Settings Screen',
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+        ),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+
+
+
+
+
+
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +68,7 @@ class DashboardScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
           ),
@@ -56,24 +90,18 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
             _createDrawerItem(
-              icon: Icons.dashboard,
-              text: 'Dashboard',
-              onTap: () => Navigator.pop(context),
+                icon: Icons.dashboard,
+                onTap: () {
+                  setState(() {
+                    _selectedIndex = 0;
+                  });
+                  Navigator.pop(context);
+                },
               isSelected: true,
             ),
             _createDrawerItem(
-              icon: Icons.person,
-              text: 'Profile',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()),
-                );
-              },
-            ),
-            _createDrawerItem(
               icon: Icons.announcement,
-              text: 'Announcement',
+
               onTap: () {
                 Navigator.push(
                   context,
@@ -83,137 +111,56 @@ class DashboardScreen extends StatelessWidget {
             ),
             _createDrawerItem(
               icon: Icons.notifications,
-              text: 'Notification',
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => NotificationScreen()));
               },
             ),
             _createDrawerItem(
-              icon: Icons.settings,
-              text: 'Settings',
-              onTap: () {},
-            ),
+                icon: Icons.settings,
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const SettingsScreen()));
+                }),
             _createDrawerItem(
-              icon: Icons.help,
-              text: 'Help',
-              onTap: () {},
-            ),
+                icon: Icons.help,
+                onTap: () {
+                  // Handle help
+                }),
             Divider(),
             _createDrawerItem(
-              icon: Icons.exit_to_app,
-              text: 'Logout',
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
-              },
-            ),
+                icon: Icons.exit_to_app,
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  );
+                }),
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Overview',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue[800],
-              ),
-            ),
-            SizedBox(height: 16),
-            GridView.count(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              children: [
-                _buildStatCard('Total Users', '1,234', Icons.people, Colors.blue),
-                _buildStatCard('Revenue', '\$12,345', Icons.attach_money, Colors.green),
-                _buildStatCard('Tasks', '24', Icons.assignment, Colors.orange),
-                _buildStatCard('Messages', '15', Icons.message, Colors.purple),
-              ],
-            ),
-            SizedBox(height: 24),
-            Text(
-              'Recent Activity',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue[800],
-              ),
-            ),
-            SizedBox(height: 16),
-            _buildActivityItem('New user registered', '10 min ago', Icons.person_add),
-            _buildActivityItem('System updated', '2 hours ago', Icons.system_update),
-            _buildActivityItem('Payment received', '5 hours ago', Icons.payment),
-            _buildActivityItem('New task assigned', '1 day ago', Icons.assignment_ind),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Colors.blue[800],
-        elevation: 4,
-        child: Icon(Icons.add, color: Colors.white),
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }
 
-  Widget _createDrawerItem({required IconData icon, required String text, required GestureTapCallback onTap, bool isSelected = false}) {
+  Widget _createDrawerItem({required IconData icon, required GestureTapCallback onTap, bool isSelected = false}) {
     return ListTile(
       leading: Icon(icon, color: isSelected ? Colors.blue[800] : Colors.grey[700]),
-      title: Text(text,
-          style: TextStyle(
-              color: isSelected ? Colors.blue[800] : Colors.grey[700],
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
-      onTap: onTap,
-      selected: isSelected,
-    );
-  }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 14,
-                  ),
-                ),
-                Icon(icon, color: color),
-              ],
-            ),
-            SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue[800],
-              ),
-            ),
-          ],
-        ),
-      ),
+      onTap: onTap,
+      contentPadding: EdgeInsets.symmetric(horizontal: 20),
+
+      selectedColor: Colors.blue[800],
+      selected: isSelected,
     );
   }
 
@@ -236,4 +183,5 @@ class DashboardScreen extends StatelessWidget {
       ),
     );
   }
+
 }
