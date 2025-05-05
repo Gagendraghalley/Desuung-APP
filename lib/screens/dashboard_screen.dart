@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/config/app_constants.dart';
+
 import '../config/theme.dart';
-import '../widgets/custom_app_bar.dart'; 
+import '../widgets/custom_app_bar.dart';
 import 'announcement_screen.dart';
 import 'settings_screen.dart';
 import 'notification_screen.dart';
-import 'package:myapp/screens/profile_screen.dart';
+import 'profile_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -15,6 +17,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentPageIndex = 0;
+
   final List<Map<String, dynamic>> _activities = [
     {
       'title': 'Activity 1',
@@ -41,34 +44,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
       'color': Colors.green
     },
   ];
+
   final List<Widget> _widgetOptions = <Widget>[
     Container(
-      padding: const EdgeInsets.all(16.0),
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.5,
-        ),
-          itemCount: 4, // Display only 4 cards in the grid
+        padding: const EdgeInsets.all(16.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+            childAspectRatio: 1.5,
+          ),
+          itemCount: 4,
           itemBuilder: (context, index) => _buildCard(index),
         )),
-    
-         ProfileScreen(),
-      const Center(
-        child: Text(
-          'Settings Screen',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
+    ProfileScreen(),
+    const Center(
+      child: Text(
+        'Settings Screen',
+        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+      ),
     ),
-  
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _currentPageIndex = index;
-    });
+    setState(() => _currentPageIndex = index);
   }
 
   @override
@@ -76,7 +76,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
        appBar: CustomAppBar(title: 'Dashboard'),
        drawer: Drawer(
-          child: Container(  decoration:  BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1)), child: ListView(
+          child: Container(
+            decoration: BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1)),
+            child: ListView(
           children: <Widget>[
             Container(
               padding: const EdgeInsets.only(top: 40, bottom: 20),
@@ -95,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             _createDrawerItem(
               icon: Icons.dashboard,
-              text: "Dashboard",
+              text: MenuName.home.value,
               onTap: () {               
                 _onItemTapped(0);
                 Navigator.pop(context);
@@ -103,8 +105,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               isSelected: _currentPageIndex == 0,
             ),
             _createDrawerItem(
-              icon: Icons.announcement,
-              text: "Announcements",
+              icon: Icons.announcement, 
+              text: MenuName.announcement.value,
               onTap: () {
                 setState(() {
                   _currentPageIndex = -1;
@@ -116,8 +118,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
             ),
             _createDrawerItem(
-              icon: Icons.notifications,
-              text: "Notifications",
+              icon: Icons.notifications, 
+              text: MenuName.notification.value,
               onTap: () {
                  setState(() {
                   _currentPageIndex = -1;
@@ -129,8 +131,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
               },
             ),
             _createDrawerItem(
-              icon: Icons.settings,
-              text: "Settings",
+              icon: Icons.settings, 
+              text: MenuName.settings.value,
               onTap: () {
                 setState(() {
                   _currentPageIndex = -1;
@@ -143,7 +145,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             _createDrawerItem(
               icon: Icons.help,
-              text: "Help",
+              text: "Help", 
               onTap: () {
                 // Handle help
               },
@@ -151,7 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
            const Divider(),
             _createDrawerItem(
               icon: Icons.exit_to_app,
-              text: "Logout",
+              text: "Logout", 
               onTap: () {
                  setState(() {
                   _currentPageIndex = -1;
@@ -165,13 +167,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
       ),
-      body: _widgetOptions.elementAt(_currentPageIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        selectedItemColor: AppTheme.primaryColor,
-        unselectedItemColor: AppTheme.inactiveColor,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        body: _widgetOptions.elementAt(_currentPageIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: AppTheme.primaryColor,
+          selectedItemColor: Colors.black,
+          unselectedItemColor: Colors.black,
+          items:  <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: const Icon(Icons.home), label: MenuName.home.value),
+          BottomNavigationBarItem(icon: const Icon(Icons.announcement), label: MenuName.announcement.value),
+           BottomNavigationBarItem(icon: const Icon(Icons.notifications), label: MenuName.notification.value),
+
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
@@ -202,14 +207,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildCard(int index) {
       final activity = _activities[index];
-      return Card(
-        child: ListTile(
-          leading: Icon(activity['icon'], size: 32, color: activity['color']),
-           title: Text(activity['title'], style: const TextStyle(fontWeight: FontWeight.w500)),
-            subtitle: Text(activity['time'], style: TextStyle(color: Colors.grey[600])),
-           trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      )
-        ),
-      );
+    return Card(
+      child: ListTile(
+        leading: Icon(activity['icon'], size: 32, color: activity['color']),
+        title: Text(activity['title'],
+            style: const TextStyle(fontWeight: FontWeight.w500)),
+        subtitle:
+            Text(activity['time'], style: TextStyle(color: Colors.grey[600])),
+        trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      ),
+    );
   }
 }
