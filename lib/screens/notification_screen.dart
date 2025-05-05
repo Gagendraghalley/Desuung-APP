@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/widgets/custom_app_bar.dart';
-import 'package:myapp/config/theme.dart';
-import 'package:myapp/config/app_constants.dart';
+import '../widgets/custom_app_bar.dart';
+import '../config/theme.dart';
+import '../config/app_constants.dart';
 
 class NotificationScreen extends StatelessWidget {
   final List<NotificationItem> notifications = [
@@ -25,7 +25,7 @@ class NotificationScreen extends StatelessWidget {
     ),
   ];
 
-  NotificationScreen({super.key});
+  const NotificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class NotificationListView extends StatelessWidget {
       itemBuilder: (context, index) {
         final notification = notifications[index];
         return Card(
-          elevation: 2,
+          elevation: 1,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -115,7 +115,7 @@ class _NotificationTileState extends State<NotificationTile> {
       title: Text(
         widget.notification.title,
         style: TextStyle(
-          fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+          fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
           fontFamily: 'Roboto',
         ),
       ),

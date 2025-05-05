@@ -8,10 +8,9 @@ class Environment {
   static bool isProduction() {
     return getEnvironment() == 'prod';
   }
-
-  static const String base_url = _getBaseUrl();
-
-  static String _getBaseUrl() {
+  static String get base_url {
+    
+  
     if (getEnvironment() == 'dev') {
       return 'https://dev-api.example.com/v1/';
     }
