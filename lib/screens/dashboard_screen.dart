@@ -47,18 +47,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> _widgetOptions = <Widget>[
     Container(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.5,
-          ),
-          itemCount: 4,
-          itemBuilder: (context, index) => _buildCard(_activities[index]),
-        )),
-    
+      padding: const EdgeInsets.all(16.0),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.5,
+        ),
+        itemCount: 4,
+        itemBuilder: (context, index) => _buildCard(_activities[index]),
+      ),
+    ),
   ];
 
   void _onItemTapped(int index) {
@@ -68,97 +68,99 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(title: 'Dashboard'),
-        drawer: Drawer(
-          backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
-          child: ListView(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.only(top: 40, bottom: 20),
-                decoration: const BoxDecoration(
-                  color: AppTheme.primaryColor,
-                ),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person, color: AppTheme.primaryColor),
-                    ),
-                  ],
-                ),
+      appBar: CustomAppBar(title: 'Dashboard'),
+      drawer: Drawer(
+        backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+        child: ListView(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.only(top: 40, bottom: 20),
+              decoration: const BoxDecoration(
+                color: AppTheme.primaryColor,
               ),
-              _createDrawerItem(
-                icon: Icons.dashboard,
-                text: MenuName.home.value,
-                onTap: () {
-                  _onItemTapped(0);
-                  Navigator.pop(context);
-                },
-                isSelected: _currentPageIndex == 0,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, color: AppTheme.primaryColor),
+                  ),
+                ],
               ),
-              _createDrawerItem(
-                icon: Icons.announcement,
-                text: MenuName.announcement.value,
-                onTap: () {
-                  Navigator.pop(context);
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AnnouncementScreen()),
-                  );
-                },
-              ),
-              _createDrawerItem(
-                icon: Icons.notifications,
-                text: MenuName.notification.value,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const NotificationScreen()),
-                  );
-                },
-              ),
-              _createDrawerItem(
-                icon: Icons.settings,
-                text: MenuName.settings.value,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SettingsScreen()),
-                  );
-                },
-              ),
-              const Divider(),
-            ],
-          ),
-        ),
-        body: _widgetOptions.elementAt(_currentPageIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: AppTheme.primaryColor,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.black,
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.announcement), label: 'Announcement'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'Notification'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person), label: 'Profile'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), label: 'Settings'),
+            ),
+            _createDrawerItem(
+              icon: Icons.dashboard,
+              text: MenuName.home.value,
+              onTap: () {
+                _onItemTapped(0);
+                Navigator.pop(context);
+              },
+              isSelected: _currentPageIndex == 0,
+            ),
+            _createDrawerItem(
+              icon: Icons.announcement,
+              text: MenuName.announcement.value,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AnnouncementScreen(),
+                  ),
+                );
+              },
+            ),
+            _createDrawerItem(
+              icon: Icons.notifications,
+              text: MenuName.notification.value,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationScreen(),
+                  ),
+                );
+              },
+            ),
+            _createDrawerItem(
+              icon: Icons.settings,
+              text: MenuName.settings.value,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
+              },
+            ),
+            const Divider(),
           ],
-          currentIndex: _currentPageIndex,
-          onTap: _onItemTapped,
-        ));
-    )
+        ),
+      ),
+      body: _widgetOptions.elementAt(_currentPageIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppTheme.primaryColor,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.black,
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.announcement), label: 'Announcement'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications), label: 'Notification'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person), label: 'Profile'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings), label: 'Settings'),
+        ],
+        currentIndex: _currentPageIndex,
+        onTap: _onItemTapped,
+      ),
+    );
   }
 
   Widget _createDrawerItem({
@@ -181,14 +183,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildCard(Map<String, dynamic> activity) {
-    
     return Card(
       child: ListTile(
         leading: Icon(activity['icon'], size: 32, color: activity['color']),
-        title: Text(activity['title'],
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-        subtitle: Text(activity['time'],
-            style: TextStyle(color: Colors.grey[600])),
+        title: Text(
+          activity['title'],
+          style: const TextStyle(fontWeight: FontWeight.w500),
+        ),
+        subtitle: Text(
+          activity['time'],
+          style: TextStyle(color: Colors.grey[600]),
+        ),
         trailing: const Icon(Icons.chevron_right, color: Colors.grey),
       ),
     );
