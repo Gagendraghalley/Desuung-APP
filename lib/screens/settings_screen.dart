@@ -19,7 +19,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        children: const <Widget>[
+        children: <Widget>[
           _buildSettingsSection(context),
           const SizedBox(height: 20),
           _buildAboutSection(),
@@ -29,8 +29,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSettingsSection(BuildContext context) {
-    return const Card(
-      color: Color.fromARGB(0, 255, 255, 255),
+    return Card(
+      color: const Color.fromARGB(0, 255, 255, 255),
       child: Column(
         children: <Widget>[
           ListTile(
@@ -58,17 +58,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ],
       ),
-    
-    ); 
+    );
   }
 
-  static Widget _buildAboutSection() {
-    
+  Widget _buildAboutSection() {
     return Card(
       color: Colors.transparent,
       child: ListTile(
-        leading: const Icon(Icons.info_outline, color: Colors.black), title:
-            const Text('About', style: TextStyle(fontWeight: FontWeight.w500)),
+        leading: const Icon(Icons.info_outline, color: Colors.black),
+        title: const Text('About', style: TextStyle(fontWeight: FontWeight.w500)),
         trailing: const Icon(Icons.chevron_right, color: Colors.grey),
         onTap: () {
           // Handle about section

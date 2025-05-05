@@ -25,7 +25,7 @@ class NotificationScreen extends StatelessWidget {
     ),
   ];
 
-  const NotificationScreen({super.key});
+   NotificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class NotificationItem {
   final String time;
   final bool isRead;
 
-  const NotificationItem({
+   NotificationItem({
     required this.title,
     required this.description,
     required this.time,
@@ -105,14 +105,14 @@ class _NotificationTileState extends State<NotificationTile> {
     return ListTile(
       contentPadding: const EdgeInsets.all(16.0),
       leading: CircleAvatar(
-        backgroundColor: widget.notification.isRead ? AppTheme.lightGrey : Theme.of(context).colorScheme.primary,
+        backgroundColor: widget.notification.isRead ? AppTheme.inactiveIconColor : Theme.of(context).colorScheme.primary,
         child: Icon(
           _getNotificationIcon(widget.notification.title),
-          color: widget.notification.isRead ? AppTheme.darkGrey : Colors.white,
+          color: widget.notification.isRead ? AppTheme.lightTheme.appBarTheme.foregroundColor : Colors.white,
           size: 20,
         ),
-      ),
-      title: Text(
+       ),
+     title: Text(
         widget.notification.title,
         style: TextStyle(
           fontWeight: widget.notification.isRead ? FontWeight.normal : FontWeight.bold,
@@ -130,7 +130,7 @@ class _NotificationTileState extends State<NotificationTile> {
           const SizedBox(height: 4),
           Text(
             widget.notification.time,
-            style: TextStyle(color: AppTheme.darkGrey),
+            style: TextStyle(color: AppTheme.lightTheme.appBarTheme.foregroundColor),
           ),
         ],
       ),

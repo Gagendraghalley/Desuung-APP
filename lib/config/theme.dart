@@ -15,10 +15,10 @@ class AppTheme {
       secondary: _secondaryColor,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: AppTheme._primaryColor,
+      backgroundColor: _primaryColor,
       foregroundColor: AppTheme._darkTextColor,
       titleTextStyle: TextStyle(
-          color: AppTheme._darkTextColor,
+          color: _darkTextColor,
           fontSize: 20,
           fontFamily: 'Roboto',
           fontWeight: FontWeight.w500),

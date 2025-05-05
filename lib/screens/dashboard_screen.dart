@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../widgets/custom_app_bar.dart';
 import 'announcement_screen.dart';
-import 'settings_screen.dart';
 import 'notification_screen.dart';
-import 'profile_screen.dart';
+import 'settings_screen.dart';
+
 import '../config/app_constants.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -45,21 +45,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
     },
   ];
 
-  final List<Widget> _widgetOptions = <Widget>[
-    Container(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.5,
-          ),
-          itemCount: 4,
-          itemBuilder: (context, index) => _buildCard(_activities[index]),
-        )),
-    
+  final List<Map<String, dynamic>> _widgetOptions = <Map<String, dynamic>>[
+    {'activities': []},
   ];
+
+  Widget _buildActivityGrid(List<Map<String, dynamic>> activities) {
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.5,
+        ),
+        itemCount: activities.length,
+        itemBuilder: (context, index) => _buildCard(activities[index]),
+      ),
+    );
+  }
+
+  List<Widget> _buildWidgetOptions() {
+    return <Widget>[
+      _buildActivityGrid(_activities),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() => _currentPageIndex = index);
@@ -70,20 +80,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
         appBar: CustomAppBar(title: 'Dashboard'),
         drawer: Drawer(
-          backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+          backgroundColor: AppTheme.lightTheme.primaryColor.withOpacity(0.1),
           child: ListView(
             children: <Widget>[
               Container(
                 padding: const EdgeInsets.only(top: 40, bottom: 20),
-                decoration: const BoxDecoration(
-                  color: AppTheme.primaryColor,
+                decoration: BoxDecoration(
+                  color: AppTheme.lightTheme.primaryColor,
                 ),
-                child: const Column(
+                child:  Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
+                  children:  <Widget>[
                     CircleAvatar(
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.person, color: AppTheme.primaryColor),
+                      child: Icon(Icons.person, color: AppTheme.lightTheme.primaryColor),
                     ),
                   ],
                 ),
@@ -118,7 +128,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const NotificationScreen()),
+                        builder: (context) => NotificationScreen()),
                   );
                 },
               ),
@@ -138,13 +148,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
         ),
-        body: _widgetOptions.elementAt(_currentPageIndex),
+        body: _buildWidgetOptions().elementAt(_currentPageIndex),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: AppTheme.primaryColor,
+          backgroundColor: AppTheme.lightTheme.primaryColor,
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.black,
           type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.announcement), label: 'Announcement'),
@@ -158,7 +168,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           currentIndex: _currentPageIndex,
           onTap: _onItemTapped,
         ));
-    )
+    
   }
 
   Widget _createDrawerItem({
@@ -170,13 +180,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return ListTile(
       leading: Icon(
         icon,
-        color: isSelected ? AppTheme.primaryColor : AppTheme.inactiveColor,
+        color: isSelected ? AppTheme.lightTheme.primaryColor : AppTheme.inactiveIconColor,
       ),
       title: Text(text),
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-      selectedColor: AppTheme.primaryColor,
-      selected: isSelected,
+    selectedColor: AppTheme.lightTheme.primaryColor,
+    selected: isSelected,
     );
   }
 

@@ -1,13 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:myapp/config/theme.dart';
-import 'package:myapp/widgets/custom_app_bar.dart';
-import 'package:myapp/config/api_endpoints.dart';
+import '../../config/theme.dart';
+import '../../widgets/custom_app_bar.dart';
+import '../config/api_endpoints.dart';
 import '../config/environment.dart';
-import 'package:myapp/widgets/profile_detail_card.dart';
+import '../widgets/profile_detail_card.dart';
 import 'change_password_screen.dart';
-// ignore: library_private_types_in_public_api
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -30,7 +28,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Initialize with data
     _nameController.text =
         "John Doe"; // Placeholder: Replace with actual data fetching
-
     _emailController.text = "john.doe@example.com";
   }
 
@@ -52,13 +49,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _changePassword(BuildContext context) {
-     Navigator.push(
+    Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const ChangePasswordScreen()),
     );
   }
-
-
 
   void _toggleEdit() {
     setState(() {
@@ -79,16 +74,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(kToolbarHeight),
-          child: CustomAppBar(title: "Profile")),
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: CustomAppBar(title: "Profile"),
+      ),
       body: Container(
-            color: AppTheme.backgroundColor,
+        color: AppTheme.lightTheme.canvasColor,
         child: SingleChildScrollView(
-             child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-          child: Form(
-            key: _formKey,
-            child: _buildProfileContent(context),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+            child: Form(
+              key: _formKey,
+              child: _buildProfileContent(context),
+            ),
           ),
         ),
       ),
@@ -152,16 +149,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ElevatedButton(
           onPressed: () => _changePassword(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.primaryColor,
+            backgroundColor: AppTheme.lightTheme.primaryColor,
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             textStyle: const TextStyle(fontSize: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          child: const Text('Change Password',
-              style: TextStyle(color: Colors.white)),
+          child: const Text('Change Password', style: TextStyle(color: Colors.white)),
         ),
+        if (_isEditing) ...[
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: _saveProfile,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.lightTheme.primaryColor,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              textStyle: const TextStyle(fontSize: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Save', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+        if (!_isEditing) ...[
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: _toggleEdit,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.lightTheme.primaryColor,
+            ),
+            child: const Text('Edit', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ],
     );
   }
