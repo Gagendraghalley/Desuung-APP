@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/empty_screen.dart';
 import 'dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -50,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _login() {
+ void _login() {
   setState(() {
     _errorMessage = '';
   });
@@ -61,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const EmptyScreen()), // Now using EmptyScreen
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
         );
       });
     } else {
