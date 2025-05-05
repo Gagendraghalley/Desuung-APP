@@ -1,6 +1,6 @@
+import 'package:desuungapp/config/theme.dart';
 import 'package:flutter/material.dart';
-import '../widgets/custom_app_bar.dart';
-import '../config/theme.dart';
+
 import '../config/app_constants.dart';
 
 class NotificationScreen extends StatelessWidget {
@@ -29,11 +29,10 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.lightTheme.canvasColor,
-      appBar: CustomAppBar(title: MenuName.notification.name),
-      body: NotificationListView(notifications: notifications),
-    );
+    return  const Center(
+        child: Text('Notification Screen'),
+      );
+    
   }
 }
 
@@ -109,7 +108,7 @@ class _NotificationTileState extends State<NotificationTile> {
         child: Icon(
           _getNotificationIcon(widget.notification.title),
           color: widget.notification.isRead ? AppTheme.lightTheme.appBarTheme.foregroundColor : Colors.white,
-          size: 20,
+          size: 20,  
         ),
        ),
      title: Text(

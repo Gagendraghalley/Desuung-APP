@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../config/app_constants.dart';
-import '../config/theme.dart';
-import '../widgets/custom_app_bar.dart';
+
 class AnnouncementScreen extends StatefulWidget {
   const AnnouncementScreen({super.key});
 
@@ -17,7 +16,11 @@ class Announcement {
   final String description;
   final DateTime date;
 
-  Announcement({required this.title, required this.description, required this.date});
+  Announcement({
+    required this.title,
+    required this.description,
+    required this.date,
+  });
 }
 
 class _AnnouncementScreenState extends State<AnnouncementScreen> {
@@ -26,36 +29,32 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     Announcement(
       title: 'Important Update',
       description: 'We have an important update regarding our services. Please read more to find out.',
-      date: DateTime.now().subtract(Duration(days: 1)),
+      date: DateTime.now().subtract(const Duration(days: 1)),
     ),
     Announcement(
       title: 'New Feature Release',
       description: 'Exciting news! We have released a new feature that will help you manage your tasks more efficiently.',
-      date: DateTime.now().subtract(Duration(days: 3)),
+      date: DateTime.now().subtract(const Duration(days: 3)),
     ),
     Announcement(
       title: 'System Maintenance',
       description: 'Our system will undergo maintenance on the coming Sunday. Access might be limited during this period.',
-      date: DateTime.now().subtract(Duration(days: 7)),
+      date: DateTime.now().subtract(const Duration(days: 7)),
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppTheme.lightTheme.scaffoldBackgroundColor,
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: PreferredSize(preferredSize: const Size.fromHeight(kToolbarHeight), child: CustomAppBar(title: MenuName.announcement.name)),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListView.builder(
-            itemCount: announcements.length,
-            itemBuilder: (context, index) {
-              final announcement = announcements[index];
-              return _buildAnnouncementCard(announcement);
-            },),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Announcements'),
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: announcements.length,
+        itemBuilder: (context, index) {
+          return _buildAnnouncementCard(announcements[index]);
+        },
       ),
     );
   }
@@ -87,4 +86,5 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
         ),
       ),
     );
-  }}
+  }
+}

@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import '../screens/change_password_screen.dart';
-import '../config/app_constants.dart';
-import '../config/theme.dart';
-import '../widgets/custom_app_bar.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -13,20 +10,8 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: MenuName.settings.name),
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        children: <Widget>[
-          _buildSettingsSection(context),
-          const SizedBox(height: 20),
-          _buildAboutSection(),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => const Center(child: Text('Settings Screen'),);
+  
 
   Widget _buildSettingsSection(BuildContext context) {
     return Card(

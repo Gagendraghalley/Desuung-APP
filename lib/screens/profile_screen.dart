@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../config/theme.dart';
-import '../../widgets/custom_app_bar.dart';
 import '../config/api_endpoints.dart';
-import '../config/environment.dart';
 import '../widgets/profile_detail_card.dart';
 import 'change_password_screen.dart';
 
@@ -72,27 +70,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: CustomAppBar(title: "Profile"),
-      ),
-      body: Container(
+    return Container(
         color: AppTheme.lightTheme.canvasColor,
         child: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
             child: Form(
               key: _formKey,
-              child: _buildProfileContent(context),
+              child: _buildProfileContent(),
+
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
-  Widget _buildProfileContent(BuildContext context) {
+  Widget _buildProfileContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
