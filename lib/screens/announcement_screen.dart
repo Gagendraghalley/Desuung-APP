@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_app_bar.dart';
 import 'package:intl/intl.dart';
 
+import '../config/app_constants.dart';
 import '../config/theme.dart';
 class AnnouncementScreen extends StatefulWidget {
   const AnnouncementScreen({super.key});
@@ -45,7 +46,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
       color: AppTheme.lightTheme.scaffoldBackgroundColor,
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: PreferredSize(preferredSize: const Size.fromHeight(kToolbarHeight), child: CustomAppBar(title: 'Announcement')),
+        appBar: PreferredSize(preferredSize: const Size.fromHeight(kToolbarHeight), child: CustomAppBar(title: MenuName.announcement.name)),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ListView.builder(

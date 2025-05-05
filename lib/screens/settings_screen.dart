@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/screens/change_password_screen.dart';
+import 'package:myapp/config/app_constants.dart';
 import 'package:myapp/config/theme.dart';
 import 'package:myapp/widgets/custom_app_bar.dart';
 
@@ -14,7 +15,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: "Settings"),
+      appBar:  CustomAppBar(title: MenuName.settings.name),
       backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),

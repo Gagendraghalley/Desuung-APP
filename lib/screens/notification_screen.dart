@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/widgets/custom_app_bar.dart';
 import 'package:myapp/config/theme.dart';
+import 'package:myapp/config/app_constants.dart';
 
 class NotificationScreen extends StatelessWidget {
   final List<NotificationItem> notifications = [
@@ -30,7 +31,7 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.lightTheme.canvasColor,
-      appBar: CustomAppBar(title: "Notifications"),
+      appBar: CustomAppBar(title: MenuName.notification.name),
       body: NotificationListView(notifications: notifications),
     );
   }

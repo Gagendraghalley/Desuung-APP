@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myapp/config/app_constants.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -16,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         title,
         style: GoogleFonts.roboto(
           fontSize: 22,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
       ),
@@ -24,9 +25,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Theme.of(context).colorScheme.primary,
       actions: [
         IconButton(
-          icon: const Icon(
-            Icons.notifications,
-            color: Colors.white,
+          icon: Icon(
+           Icons.notifications,
+           color: Theme.of(context).colorScheme.background,
+          
           ),
           onPressed: () {
             print("Notification button pressed");
@@ -34,9 +36,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           icon: const CircleAvatar(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey,
             child: Icon(
-              Icons.person,
+              Icons.account_circle_rounded,
               color: Colors.blueGrey,
               size: 28,
             ),
