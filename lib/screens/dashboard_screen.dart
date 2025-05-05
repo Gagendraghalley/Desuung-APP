@@ -80,7 +80,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
         appBar: CustomAppBar(title: 'Dashboard'),
         drawer: Drawer(
-          backgroundColor: AppTheme.lightTheme.primaryColor.withOpacity(0.1),
+          backgroundColor: AppTheme.lightTheme.canvasColor.withOpacity(0.8),
           child: ListView(
             children: <Widget>[
               Container(

@@ -15,7 +15,7 @@ class AppTheme {
       secondary: _secondaryColor,
     ),
     appBarTheme: AppBarTheme(
-      backgroundColor: _primaryColor,
+      backgroundColor: _secondaryColor,
       foregroundColor: AppTheme._darkTextColor,
       titleTextStyle: TextStyle(
           color: _darkTextColor,
@@ -24,7 +24,7 @@ class AppTheme {
           fontWeight: FontWeight.w500),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: _primaryColor,
+      backgroundColor: _secondaryColor,
       selectedItemColor: _darkTextColor,
       unselectedItemColor: _lightGreyColor,
       type: BottomNavigationBarType.fixed,
