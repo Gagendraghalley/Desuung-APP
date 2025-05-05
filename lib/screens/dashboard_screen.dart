@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import '../config/theme.dart';
+import '../widgets/custom_app_bar.dart'; 
 import 'announcement_screen.dart';
-import 'profile_screen.dart';
+import 'settings_screen.dart';
 import 'notification_screen.dart';
-import 'login_screen.dart'; // Added missing import
-import 'settings_screen.dart'; // Added missing import
+import 'package:myapp/screens/profile_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,92 +14,101 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  int _selectedIndex = 0;
-  static final List<Widget> _widgetOptions = <Widget>[
-    const Center(
-      child: Text(
-        'Home Screen',
-        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-      ),
+  int _currentPageIndex = 0;
+  final List<Map<String, dynamic>> _activities = [
+    {
+      'title': 'Activity 1',
+      'time': '10:00 AM',
+      'icon': Icons.check_circle_outline,
+      'color': Colors.green
+    },
+    {
+      'title': 'Activity 2',
+      'time': '11:30 AM',
+      'icon': Icons.warning,
+      'color': Colors.orange
+    },
+    {
+      'title': 'Activity 3',
+      'time': '02:00 PM',
+      'icon': Icons.error_outline,
+      'color': Colors.red
+    },
+    {
+      'title': 'Activity 4',
+      'time': '04:45 PM',
+      'icon': Icons.check_circle_outline,
+      'color': Colors.green
+    },
+  ];
+  final List<Widget> _widgetOptions = <Widget>[
+    Container(
+      padding: const EdgeInsets.all(16.0),
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1.5,
+        ),
+          itemCount: 4, // Display only 4 cards in the grid
+          itemBuilder: (context, index) => _buildCard(index),
+        )),
+    
+         ProfileScreen(),
+      const Center(
+        child: Text(
+          'Settings Screen',
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
     ),
-    ProfileScreen(),
-    const Center(
-      child: Text(
-        'Settings Screen',
-        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-      ),
-    ),
+  
   ];
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _currentPageIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        backgroundColor: Colors.blue[800],
-        iconTheme: const IconThemeData(color: Colors.white),
-        elevation: 4,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications, color: Colors.white),
-            onPressed: () {
-              // Handle notifications
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-              );
-            },
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+       appBar: CustomAppBar(title: 'Dashboard'),
+       drawer: Drawer(
+          child: Container(  decoration:  BoxDecoration(color: AppTheme.primaryColor.withOpacity(0.1)), child: ListView(
           children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName: const Text("John Doe", style: TextStyle(fontWeight: FontWeight.bold)),
-              accountEmail: const Text("john.doe@example.com"),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(Icons.person, color: Colors.blue[800]),
+            Container(
+              padding: const EdgeInsets.only(top: 40, bottom: 20),
+              decoration: const BoxDecoration(
+                color: AppTheme.primaryColor,
               ),
-              decoration: BoxDecoration(
-                color: Colors.blue[800],
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircleAvatar(
+                    backgroundColor: Colors.white,
+                    child: Icon(Icons.person, color: AppTheme.primaryColor),
+                  ),
+                ],
               ),
             ),
             _createDrawerItem(
               icon: Icons.dashboard,
               text: "Dashboard",
-              onTap: () {
-                setState(() {
-                  _selectedIndex = 0;
-                });
+              onTap: () {               
+                _onItemTapped(0);
                 Navigator.pop(context);
               },
-              isSelected: _selectedIndex == 0,
+              isSelected: _currentPageIndex == 0,
             ),
             _createDrawerItem(
               icon: Icons.announcement,
               text: "Announcements",
               onTap: () {
+                setState(() {
+                  _currentPageIndex = -1;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AnnouncementScreen()),
@@ -109,6 +119,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               icon: Icons.notifications,
               text: "Notifications",
               onTap: () {
+                 setState(() {
+                  _currentPageIndex = -1;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => NotificationScreen()),
@@ -119,6 +132,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               icon: Icons.settings,
               text: "Settings",
               onTap: () {
+                setState(() {
+                  _currentPageIndex = -1;
+                });
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SettingsScreen()),
@@ -132,28 +148,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // Handle help
               },
             ),
-            const Divider(),
+           const Divider(),
             _createDrawerItem(
               icon: Icons.exit_to_app,
               text: "Logout",
               onTap: () {
+                 setState(() {
+                  _currentPageIndex = -1;
+                });
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
                 );
               },
-            ),
+             ),
           ],
         ),
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: _widgetOptions.elementAt(_currentPageIndex),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        selectedItemColor: AppTheme.primaryColor,
+        unselectedItemColor: AppTheme.inactiveColor,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: _currentPageIndex,
         onTap: _onItemTapped,
       ),
     );
@@ -166,32 +188,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
     bool isSelected = false,
   }) {
     return ListTile(
-      leading: Icon(icon, color: isSelected ? Colors.blue[800] : Colors.grey[700]),
+      leading: Icon(
+        icon,
+        color: isSelected ? AppTheme.primaryColor : AppTheme.inactiveColor,
+      ),
       title: Text(text),
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-      selectedColor: Colors.blue[800],
+      selectedColor: AppTheme.primaryColor,
       selected: isSelected,
     );
   }
 
-  Widget _buildActivityItem(String title, String time, IconData icon) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      elevation: 1,
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.blue[50],
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: Colors.blue[800]),
+  Widget _buildCard(int index) {
+      final activity = _activities[index];
+      return Card(
+        child: ListTile(
+          leading: Icon(activity['icon'], size: 32, color: activity['color']),
+           title: Text(activity['title'], style: const TextStyle(fontWeight: FontWeight.w500)),
+            subtitle: Text(activity['time'], style: TextStyle(color: Colors.grey[600])),
+           trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      )
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-        subtitle: Text(time, style: TextStyle(color: Colors.grey[600])),
-        trailing: const Icon(Icons.chevron_right, color: Colors.grey),
-      ),
-    );
+      );
   }
 }

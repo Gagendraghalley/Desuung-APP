@@ -1,7 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:myapp/config/theme.dart';
+import 'package:myapp/widgets/custom_app_bar.dart';
+import 'package:myapp/config/api_endpoints.dart';
+import '../config/environment.dart';
+import 'package:myapp/widgets/profile_detail_card.dart';
 import 'change_password_screen.dart';
 // ignore: library_private_types_in_public_api
 
@@ -23,8 +27,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize with dummy data or fetch from storage
-    _nameController.text = "John Doe";
+    // Initialize with data
+    _nameController.text =
+        "John Doe"; // Placeholder: Replace with actual data fetching
+
     _emailController.text = "john.doe@example.com";
   }
 
@@ -38,16 +44,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedImage = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedImage != null) {
       setState(() {
         _profileImage = pickedImage;
-      });      
+      });
     }
   }
 
   void _changePassword(BuildContext context) {
-    Navigator.push(
+     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const ChangePasswordScreen()),
     );
@@ -73,30 +78,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Profile',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.lightBlue,
-        iconTheme: IconThemeData(color: Colors.white),
-        actions: [
-          IconButton(
-            icon: Icon(_isEditing ? Icons.save : Icons.edit),
-            onPressed: _isEditing ? _saveProfile : _toggleEdit,
-          ),
-        ],
-      ),
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: CustomAppBar(title: "Profile")),
       body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.lightBlue.shade100, Colors.white],
-          ),
-        ),        
+            color: AppTheme.backgroundColor,
         child: SingleChildScrollView(
+             child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           child: Form(
             key: _formKey,
@@ -108,87 +96,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileContent(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
-    bool isLandscape = orientation == Orientation.landscape;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: _isEditing ? _pickImage : null,
-          child: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              CircleAvatar(
-                radius: isLandscape ? 50 : 70,
-                backgroundImage:
-                    _profileImage != null ? NetworkImage(_profileImage!.path) as ImageProvider : null,
-                child: _profileImage == null
-                    ? Icon(Icons.person,
-                        size: isLandscape ? 50 : 70, color: Colors.white)
-                    : null,
-              ),
-              if (_isEditing)
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 20,
-                  child: Icon(Icons.camera_alt, color: Colors.blue),
-                ),
-            ],
-          ),
+        ProfileDetailCard(
+          isEditing: _isEditing,
+          profileImage: _profileImage,
+          pickImage: _pickImage,
         ),
         const SizedBox(height: 20),
-        TextFormField(
-          controller: _nameController,
-          enabled: _isEditing,
-          decoration: const InputDecoration(
-            labelText: 'Name',
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(),
+        Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your name';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 16),
-        TextFormField(
-          controller: _emailController,
-          enabled: _isEditing,
-          decoration: const InputDecoration(
-            labelText: 'Email',
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(),
-          ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter your email';
-            }
-            if (!value.contains('@')) {
-              return 'Please enter a valid email';
-            }
-            return null;
-          },
-        ),
-
-        const SizedBox(height: 24), // Add spacing before the button
-          ElevatedButton(
-          onPressed: () => _changePassword(context),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue, // Button color
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16), // Padding
-            textStyle: const TextStyle(fontSize: 16), // Text style
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8), // Rounded corners
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  enabled: _isEditing,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your name';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _emailController,
+                  enabled: _isEditing,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!value.contains('@')) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
+              ],
             ),
           ),
-          child: const Text('Change Password', style: TextStyle(color: Colors.white)), // Text color
         ),
-
+        const SizedBox(height: 24),
+        ElevatedButton(
+          onPressed: () => _changePassword(context),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppTheme.primaryColor,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+            textStyle: const TextStyle(fontSize: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: const Text('Change Password',
+              style: TextStyle(color: Colors.white)),
+        ),
       ],
     );
   }

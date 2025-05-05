@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/widgets/custom_app_bar.dart';
+import 'package:myapp/config/theme.dart';
 
 class NotificationScreen extends StatelessWidget {
   final List<NotificationItem> notifications = [
@@ -27,9 +29,8 @@ class NotificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notifications'),
-      ),
+      backgroundColor: AppTheme.lightTheme.canvasColor,
+      appBar: CustomAppBar(title: "Notifications"),
       body: NotificationListView(notifications: notifications),
     );
   }
@@ -60,29 +61,33 @@ class NotificationListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(16.0),
       itemCount: notifications.length,
       separatorBuilder: (context, index) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final notification = notifications[index];
-        return NotificationTile(
-          notification: notification,
-          onTap: () {
-            // Handle notification tap
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Selected: ${notification.title}')),
-            );
-          },
+        return Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: NotificationTile(
+            notification: notification,
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Selected: ${notification.title}')),
+              );
+            },
+          ),
         );
       },
     );
   }
 }
 
-class NotificationTile extends StatelessWidget {
+class NotificationTile extends StatefulWidget {
   final NotificationItem notification;
   final VoidCallback onTap;
-
   const NotificationTile({
     super.key,
     required this.notification,
@@ -90,52 +95,52 @@ class NotificationTile extends StatelessWidget {
   });
 
   @override
+  State<NotificationTile> createState() => _NotificationTileState();
+}
+
+class _NotificationTileState extends State<NotificationTile> {
+  @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 8.0,
-      ),
+      contentPadding: const EdgeInsets.all(16.0),
       leading: CircleAvatar(
-        backgroundColor: notification.isRead
-            ? Colors.grey[300]
-            : Theme.of(context).colorScheme.primary,
+        backgroundColor: widget.notification.isRead ? AppTheme.lightGrey : Theme.of(context).colorScheme.primary,
         child: Icon(
-          _getNotificationIcon(notification.title),
-          color: notification.isRead ? Colors.grey : Colors.white,
+          _getNotificationIcon(widget.notification.title),
+          color: widget.notification.isRead ? AppTheme.darkGrey : Colors.white,
           size: 20,
         ),
       ),
       title: Text(
-        notification.title,
+        widget.notification.title,
         style: TextStyle(
           fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+          fontFamily: 'Roboto',
         ),
       ),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(notification.description),
+          Text(
+            widget.notification.description,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 4),
           Text(
-            notification.time,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey,
-                ),
+            widget.notification.time,
+            style: TextStyle(color: AppTheme.darkGrey),
           ),
         ],
       ),
-      trailing: notification.isRead
-          ? null
-          : Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                shape: BoxShape.circle,
-              ),
-            ),
-      onTap: onTap,
+      trailing: !widget.notification.isRead
+          ? Icon(
+              Icons.circle,
+              size: 12,
+              color: Theme.of(context).colorScheme.primary,
+            )
+          : null,
+      onTap: widget.onTap,
     );
   }
 
