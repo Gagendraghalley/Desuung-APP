@@ -16,8 +16,22 @@ class DeSuung extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.orange,
+          brightness: Brightness.light,
+          // Optional: Customize specific colors
+          primary: Colors.orange.shade800,
+          secondary: Colors.orange.shade600,
+        ),
         useMaterial3: true,
+        // Additional orange-themed customizations
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.orange.shade800,
+          foregroundColor: Colors.white,
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.orange.shade600,
+        ),
       ),
       home: DashboardScreen(),
     );

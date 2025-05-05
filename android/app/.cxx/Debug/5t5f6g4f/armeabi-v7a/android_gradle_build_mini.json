@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/user/Desktop/Office Project/rgob-organogram-frontend/Flutter Application/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/user/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/user/Desktop/Office Project/Desuups /Desuung-APP/android/app/.cxx/Debug/5t5f6g4f/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/user/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/user/Desktop/Office Project/Desuups /Desuung-APP/android/app/.cxx/Debug/5t5f6g4f/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

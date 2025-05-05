@@ -1,0 +1,2 @@
+/Users/user/Desktop/Office Project/Desuups /Desuung-APP/android/app/.cxx/Debug/5t5f6g4f/x86_64/CMakeFiles/edit_cache.dir
+/Users/user/Desktop/Office Project/Desuups /Desuung-APP/android/app/.cxx/Debug/5t5f6g4f/x86_64/CMakeFiles/rebuild_cache.dir
