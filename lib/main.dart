@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'config/theme.dart';
 import 'screens/login_screen.dart';
+import 'screens/attendance_screen.dart';
 import 'screens/dashboard_screen.dart';
 
 
@@ -22,6 +23,9 @@ class DeSuung extends StatelessWidget {
       themeMode: ThemeMode.light,
       darkTheme: AppTheme.darkTheme,
       home: LoginScreen(),
+      routes: {
+        '/attendance': (context) => AttendanceScreen(),
+      },
     );
   }
 } 

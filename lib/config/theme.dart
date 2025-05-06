@@ -73,7 +73,6 @@ class AppTheme {
       primary: _primaryColor,
       secondary: _secondaryColor,
       surface: _cardColor,
-      background: _scaffoldBackgroundColor,
       error: _errorColor,
     ),
     appBarTheme: AppBarTheme(

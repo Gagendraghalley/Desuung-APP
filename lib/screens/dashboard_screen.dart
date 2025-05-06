@@ -8,6 +8,7 @@ import 'notification_screen.dart';
 import 'profile_screen.dart';
 import 'settings_screen.dart';
 import 'login_screen.dart';
+import 'attendance_screen.dart';
 
 import '../config/app_constants.dart';
 
@@ -135,6 +136,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
               ),
+               _createDrawerItem(
+                icon: Icons.calendar_today,
+                text: "Attendance",
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AttendanceScreen()),
+                  );
+                },),
               const Divider(),
               _createDrawerItem(
                 icon: Icons.logout,
