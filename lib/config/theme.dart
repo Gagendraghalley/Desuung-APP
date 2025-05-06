@@ -1,39 +1,134 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  // Color Palette
   static const Color _primaryColor = Color(0xFFFFC107); // Yellow (Primary)
   static const Color _secondaryColor = Color(0xFFFDD835); // Lighter Yellow (Secondary)
   static const Color _darkTextColor = Color(0xFF212121); // Dark Grey for Text
-  static const Color _lightGreyColor = Color(0xFF757575); // light gray for inactive icon
+  static const Color _lightTextColor = Color(0xFF757575); // Light Grey for Text
+  static const Color _scaffoldBackgroundColor = Color(0xFFF5F5F5); // Light Grey background
+  static const Color _cardColor = Colors.white; // White for cards
+  static const Color _successColor = Color(0xFF4CAF50); // Green for success
+  static const Color _infoColor = Color(0xFF2196F3); // Blue for info
+  static const Color _warningColor = Color(0xFFFF9800); // Orange for warning
+  static const Color _errorColor = Color(0xFFF44336); // Red for errors
 
+  // Text Styles
+  static const TextStyle headlineLarge = TextStyle(
+    fontSize: 28,
+    fontWeight: FontWeight.bold,
+    color: _darkTextColor,
+  );
+
+  static const TextStyle headlineMedium = TextStyle(
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+    color: _darkTextColor,
+  );
+
+  static const TextStyle headlineSmall = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: _darkTextColor,
+  );
+
+  static const TextStyle titleLarge = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: _darkTextColor,
+  );
+
+  static const TextStyle titleMedium = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: _darkTextColor,
+  );
+
+  static const TextStyle bodyLarge = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+    color: _darkTextColor,
+  );
+
+  static const TextStyle bodyMedium = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+    color: _darkTextColor,
+  );
+
+  static const TextStyle bodySmall = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.normal,
+    color: _lightTextColor,
+  );
+
+  // Theme Definitions
   static ThemeData lightTheme = ThemeData(
     fontFamily: 'Roboto',
     brightness: Brightness.light,
     primaryColor: _primaryColor,
+    scaffoldBackgroundColor: _scaffoldBackgroundColor,
+    cardColor: _cardColor,
     colorScheme: ColorScheme.light(
       primary: _primaryColor,
       secondary: _secondaryColor,
+      surface: _cardColor,
+      background: _scaffoldBackgroundColor,
+      error: _errorColor,
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: _secondaryColor,
-      foregroundColor: AppTheme._darkTextColor,
+      foregroundColor: _darkTextColor,
+      elevation: 0,
+      centerTitle: true,
       titleTextStyle: TextStyle(
-          color: _darkTextColor,
-          fontSize: 20,
-          fontFamily: 'Roboto',
-          fontWeight: FontWeight.w500),
+        color: _darkTextColor,
+        fontSize: 20,
+        fontFamily: 'Roboto',
+        fontWeight: FontWeight.w500,
+      ),
+      iconTheme: const IconThemeData(color: _darkTextColor),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: _secondaryColor,
       selectedItemColor: _darkTextColor,
-      unselectedItemColor: _lightGreyColor,
+      unselectedItemColor: _lightTextColor,
       type: BottomNavigationBarType.fixed,
+      selectedLabelStyle: bodySmall.copyWith(fontWeight: FontWeight.bold),
+      unselectedLabelStyle: bodySmall,
+    ),
+    cardTheme: CardTheme(
+      color: _cardColor,
+      elevation: 2,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: _primaryColor,
+        foregroundColor: _darkTextColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      ),
+    ),
+    dividerTheme: const DividerThemeData(
+      thickness: 1,
+      color: Color(0xFFEEEEEE),
     ),
   );
 
   static ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
+    // Add your dark theme configurations here
   );
 
-  static const Color inactiveIconColor = _lightGreyColor;
+  // Direct color access (optional)
+  static const Color primaryColor = _primaryColor;
+  static const Color primaryColorDark = Color(0xFFFFA000); // Darker yellow
+  static const Color scaffoldBackgroundColor = _scaffoldBackgroundColor;
+  static const Color inactiveIconColor = _lightTextColor;
 }

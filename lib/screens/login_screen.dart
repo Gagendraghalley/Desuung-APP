@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/empty_screen.dart';
 import 'dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -50,31 +51,31 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _login() {
-    setState(() {
-      _errorMessage = '';
-    });
-    if (_formKey.currentState!.validate()) {
-      String email = _emailController.text;
-      String password = _passwordController.text;
-      if (email == 'test@gmail.com' && password == 'password') {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => DashboardScreen()),
-          );
-        });
-      } else {
-        setState(() {
-          _errorMessage = 'Invalid email or password.';
-        });
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          _passwordController.clear();
-        });
-      }
+ void _login() {
+  setState(() {
+    _errorMessage = '';
+  });
+  if (_formKey.currentState!.validate()) {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    if (email == 'test@gmail.com' && password == 'password') {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        );
+      });
+    } else {
+      setState(() {
+        _errorMessage = 'Invalid email or password.';
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _passwordController.clear();
+      });
     }
-      _unfocusFields();
   }
+  _unfocusFields();
+}
 
   void _showForgotPasswordScreen() {
     setState(() {
@@ -153,20 +154,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(
+                    const Text(
                       'De-suung App',
                       style: TextStyle(
                         fontSize: 40,
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     if (_errorMessage.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16.0),
                         child: Text(
                           _errorMessage,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
                           ),
@@ -179,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'Enter your email',
-                        prefixIcon: Icon(Icons.email),
+                        prefixIcon: const Icon(Icons.email),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -196,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     TextFormField(
                       focusNode: _passwordFocusNode,
                       controller: _passwordController,
@@ -216,18 +217,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 24),
+                    const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Color(0xFF0D47A1),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: const Color(0xFF0D47A1),
                         elevation: 5,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         'LOGIN',
                         style: TextStyle(
                           fontSize: 18,
@@ -264,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Card(
                 elevation: 8.0,
                 shape: RoundedRectangleBorder(
@@ -276,7 +277,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text(
+                      const Text(
                         'Forgot Password',
                         style: TextStyle(
                           fontSize: 24,
@@ -285,13 +286,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       if (_errorMessage.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
                           child: Text(
                             _errorMessage,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.red,
                               fontWeight: FontWeight.bold,
                             ),
@@ -303,14 +304,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _forgotPasswordEmailController,
                         decoration: InputDecoration(
                           labelText: 'Email',
-                          prefixIcon: Icon(Icons.email),
+                          prefixIcon: const Icon(Icons.email),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           filled: true,
                           fillColor: Colors.white70,
                         ),
-                         validator: (value) {
+                        validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your email';
                           }
@@ -320,18 +321,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
                       ElevatedButton(
                         onPressed: _recoverPassword,
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: Color(0xFF0D47A1),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: const Color(0xFF0D47A1),
                           elevation: 5,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'SUBMIT',
                           style: TextStyle(
                             fontSize: 18,

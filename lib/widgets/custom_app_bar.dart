@@ -7,7 +7,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   const CustomAppBar({
     super.key,
-    required this.title,
+    required this.title, List<Widget>? actions,
   });
 
   @override
@@ -26,15 +26,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Theme.of(context).colorScheme.primary,
       actions: [
         IconButton(
-          icon: Icon(
-            Icons.notifications,
-            color: Theme.of(context).colorScheme.onPrimary,
-          ),
-          onPressed: () {
-            print("${MenuName.notification.name} button pressed");
-          },
-        ),
-        IconButton(
           icon: const CircleAvatar(
             backgroundColor: Colors.grey,
             child: Icon(
@@ -44,7 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           padding: const EdgeInsets.only(right: 20),
-           onPressed: () {
+            onPressed: () {
             print("profile icon pressed");
           },
         ),
