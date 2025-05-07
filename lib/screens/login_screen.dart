@@ -304,7 +304,7 @@
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Column(
-  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     // Simplified logo presentation
                     Padding(

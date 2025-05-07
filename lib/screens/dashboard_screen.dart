@@ -52,7 +52,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final List<Widget> _widgetOptions = <Widget>[
     EmptyScreen(),
     AnnouncementScreen(),
-    NotificationScreen(),
     ProfileScreen(),
     SettingsScreen(),
   ];
@@ -93,8 +92,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int _notificationCount = 5; // Example notification count
+
     return Scaffold(
-        appBar: CustomAppBar(title: 'Dashboard'),
+        appBar: CustomAppBar(
+          title: 'Dashboard',
+          actions: [
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.notifications),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
+                  },
+                ),
+                 if (_notificationCount > 0) Positioned( right: 0, top: 0, child: Container( padding: const EdgeInsets.all(2), decoration: BoxDecoration( color: Colors.red, borderRadius: BorderRadius.circular(6), ), constraints: const BoxConstraints( minWidth: 12, minHeight: 12, ), child: Text( '$_notificationCount', style: const TextStyle( color: Colors.white, fontSize: 8, ), textAlign: TextAlign.center, ), ), ),
+              ],
+            ),
+          ]),
         drawer: Drawer(
           backgroundColor: AppTheme.lightTheme.canvasColor.withOpacity(0.8),
           child: ListView(
@@ -165,12 +180,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           selectedItemColor: Colors.black,
           unselectedItemColor: Colors.black,
           type: BottomNavigationBarType.fixed,
-          items: <BottomNavigationBarItem>[
+          items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.announcement), label: 'Announcement'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.notifications), label: 'Notification'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.person), label: 'Profile'),
             BottomNavigationBarItem(
