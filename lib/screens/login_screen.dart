@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
-import 'dashboard_screen.dart'; // Keep this import for MenuName
-import 'announcement_before_login_screen.dart'; // New import
-import 'news_screen.dart'; // New import
- 
-class LoginScreen extends StatefulWidget {
+  import 'package:flutter/material.dart';
+  import 'dashboard_screen.dart'; // Keep this import for MenuName
+  import 'announcement_before_login_screen.dart'; // New import
+  import 'news_screen.dart'; // New import
+
+  class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
-}
+  }
 
-class _LoginScreenState extends State<LoginScreen> {
+  class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -304,12 +304,12 @@ class _LoginScreenState extends State<LoginScreen> {
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Column(
- mainAxisSize: MainAxisSize.min,
+  mainAxisSize: MainAxisSize.min,
                   children: [
                     // Simplified logo presentation
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
- child: Image.asset('assets/images/logo.png', height: 80), // Simplified logo
+  child: Image.asset('assets/images/logo.png', height: 80), // Simplified logo
                     ),
                     const SizedBox(height: 48),
                     
@@ -809,4 +809,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-}
+  }
