@@ -1,9 +1,8 @@
+import 'package:desuungapp/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../config/theme.dart';
-import '../widgets/empty_screen.dart';
-import '../widgets/custom_app_bar.dart';
-import 'announcement_screen.dart';
+import 'announcement_screen.dart'; // Keep AnnouncementScreen import if still used in drawer or elsewhere
 import 'notification_screen.dart';
 import 'profile_screen.dart';
 import 'settings_screen.dart';
@@ -50,7 +49,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   final List<Widget> _widgetOptions = <Widget>[
-    EmptyScreen(),
+    const Center(child: Text('Home Screen Content')), // Placeholder for Home screen content
     AnnouncementScreen(),
     ProfileScreen(),
     SettingsScreen(),
@@ -96,17 +95,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     return Scaffold(
         appBar: CustomAppBar(
-          title: 'Dashboard',
+          title: 'Dashboard', // You can change this title as needed
           actions: [
-            Stack(
-              children: [
+            Stack( // Use Stack to position the badge over the icon
+              children: <Widget>[
                 IconButton(
                   icon: const Icon(Icons.notifications),
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
                   },
                 ),
-                 if (_notificationCount > 0) Positioned( right: 0, top: 0, child: Container( padding: const EdgeInsets.all(2), decoration: BoxDecoration( color: Colors.red, borderRadius: BorderRadius.circular(6), ), constraints: const BoxConstraints( minWidth: 12, minHeight: 12, ), child: Text( '$_notificationCount', style: const TextStyle( color: Colors.white, fontSize: 8, ), textAlign: TextAlign.center, ), ), ),
+                if (_notificationCount > 0) // Only show badge if count > 0
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: const BoxConstraints(minWidth: 12, minHeight: 12),
+                      child: Text(
+                        '$_notificationCount',
+                        style: const TextStyle(color: Colors.white, fontSize: 8),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ]),
