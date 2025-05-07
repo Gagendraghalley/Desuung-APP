@@ -70,7 +70,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w500,
-                    color: AppTheme.darkTextColor),
+                    color: AppTheme.primaryColor),
               ),
               Text(attendance.status,
                   style: TextStyle(fontSize: 16, color: statusColor)),

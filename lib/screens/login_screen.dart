@@ -198,72 +198,96 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background with subtle gradient
+          // Professional background with subtle gradient
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
                 colors: [
-                  Color(0xFFF8FAFC),
-                  Color(0xFFF1F5F9),
+                  Color.fromARGB(255, 236, 190, 130),
+                  Color.fromARGB(255, 244, 215, 193),
                 ],
               ),
             ),
           ),
           
-          // Decorative elements
+          // Decorative elements with better positioning
           Positioned(
-            top: -size.width * 0.3,
-            right: -size.width * 0.2,
+            top: -size.width * 0.2,
+            right: -size.width * 0.1,
+            child: Container(
+              width: size.width * 0.6,
+              height: size.width * 0.6,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    const Color(0xFFEBF8FF).withOpacity(0.8),
+                    const Color(0xFFEBF8FF).withOpacity(0),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          
+          Positioned(
+            bottom: -size.width * 0.3,
+            left: -size.width * 0.2,
             child: Container(
               width: size.width * 0.7,
               height: size.width * 0.7,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFEFF6FF).withOpacity(0.5),
-              ),
-            ),
-          ),
-          
-          Positioned(
-            bottom: -size.width * 0.4,
-            left: -size.width * 0.3,
-            child: Container(
-              width: size.width * 0.8,
-              height: size.width * 0.8,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFFEFF6FF).withOpacity(0.5),
+                gradient: RadialGradient(
+                  colors: [
+                    const Color(0xFFF0FFF4).withOpacity(0.6),
+                    const Color(0xFFF0FFF4).withOpacity(0),
+                  ],
+                ),
               ),
             ),
           ),
           
           // Main content
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Logo placed above the form
-                  Image.asset(
-                    'assets/images/logo.png',
-                    height: 100,
-                    filterQuality: FilterQuality.high,
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 420),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      child: _isForgotPasswordScreenVisible
-                          ? _buildForgotPasswordForm(theme)
-                          : _buildLoginForm(theme),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Simplified logo presentation
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        height: 80,
+                        filterQuality: FilterQuality.high,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 48),
+                    
+                    // Form container with better shadow and border
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 420),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: _isForgotPasswordScreenVisible
+                            ? _buildForgotPasswordForm(theme)
+                            : _buildLoginForm(theme),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 32),
+                    Text(
+                      '© 2025 De-suung. All rights reserved.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: const Color(0xFF718096),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -273,17 +297,18 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLoginForm(ThemeData theme) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 236, 220, 220),
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: Colors.grey.withOpacity(0.1),
-          width: 1,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
+          ),
+        ],
       ),
-      color: Colors.white,
-      shadowColor: Colors.black.withOpacity(0.1),
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Form(
@@ -292,30 +317,43 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Title
+              // Title with better typography
               Text(
                 'Sign In',
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF2D3748),
+                  color: const Color(0xFF1A202C),
+                  letterSpacing: -0.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Sign in to continue to your account',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: const Color(0xFF718096),
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
               
-              // Error message
+              // Error message with improved styling
               if (_errorMessage.isNotEmpty) ...[
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFEE2E2),
+                    color: const Color(0xFFFEF2F2),
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: const Color(0xFFFECACA),
+                      width: 1,
+                    ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.error_outline, 
+                      const Icon(Icons.error_outline_rounded, 
                         color: Color(0xFFDC2626), size: 20),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           _errorMessage,
@@ -330,11 +368,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
               ],
               
-              // Email field
+              // Email field with improved styling
               Text(
-                'Email address',
+                'Email Address',
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: const Color(0xFF4A5568),
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 6),
@@ -351,14 +390,34 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintStyle: theme.textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFFA0AEC0),
                   ),
-                  prefixIcon: const Icon(Icons.email_outlined, 
-                    size: 20, 
-                    color: Color(0xFFA0AEC0)),
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.only(left: 16, right: 12),
+                    child: Icon(Icons.email_outlined, 
+                      size: 20, 
+                      color: Color(0xFFA0AEC0)),
+                  ),
                   filled: true,
                   fillColor: const Color(0xFFF8FAFC),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                    borderSide: const BorderSide(
+                      color: Color(0xFFE2E8F0),
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFE2E8F0),
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF4299E1),
+                      width: 1.5,
+                    ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 14, horizontal: 16),
@@ -375,11 +434,12 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 16),
               
-              // Password field
+              // Password field with improved styling
               Text(
                 'Password',
                 style: theme.textTheme.labelMedium?.copyWith(
                   color: const Color(0xFF4A5568),
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 6),
@@ -396,25 +456,48 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintStyle: theme.textTheme.bodyMedium?.copyWith(
                     color: const Color(0xFFA0AEC0),
                   ),
-                  prefixIcon: const Icon(Icons.lock_outlined, 
-                    size: 20, 
-                    color: Color(0xFFA0AEC0)),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword 
-                        ? Icons.visibility_outlined 
-                        : Icons.visibility_off_outlined,
-                      size: 20,
-                      color: const Color(0xFFA0AEC0),
+                  prefixIcon: const Padding(
+                    padding: EdgeInsets.only(left: 16, right: 12),
+                    child: Icon(Icons.lock_outlined, 
+                      size: 20, 
+                      color: Color(0xFFA0AEC0)),
+                  ),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: IconButton(
+                      icon: Icon(
+                        _obscurePassword 
+                          ? Icons.visibility_outlined 
+                          : Icons.visibility_off_outlined,
+                        size: 20,
+                        color: const Color(0xFFA0AEC0),
+                      ),
+                      onPressed: () => setState(
+                        () => _obscurePassword = !_obscurePassword),
                     ),
-                    onPressed: () => setState(
-                      () => _obscurePassword = !_obscurePassword),
                   ),
                   filled: true,
                   fillColor: const Color(0xFFF8FAFC),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                    borderSide: const BorderSide(
+                      color: Color(0xFFE2E8F0),
+                      width: 1,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      color: Color(0xFFE2E8F0),
+                      width: 1,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      color: Color(0xFF4299E1),
+                      width: 1.5,
+                    ),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 14, horizontal: 16),
@@ -431,7 +514,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 8),
               
-              // Forgot password
+              // Forgot password with better alignment
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -452,7 +535,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 24),
               
-              // Sign in button
+              // Sign in button with better styling
               ElevatedButton(
                 onPressed: _isLoading ? null : _login,
                 style: ElevatedButton.styleFrom(
@@ -463,6 +546,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
+                  shadowColor: Colors.transparent,
+                  splashFactory: InkRipple.splashFactory,
                 ),
                 child: _isLoading
                     ? const SizedBox(
@@ -479,12 +564,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: theme.textTheme.labelLarge?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
                         ),
                       ),
               ),
               const SizedBox(height: 24),
               
-              // Divider
+              // Sign in button
               Row(
                 children: [
                   Expanded(child: Divider(color: Colors.grey.withOpacity(0.3))),
@@ -520,7 +606,6 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Back button and title
             Row(
               children: [
                 IconButton(
@@ -543,7 +628,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 24),
             
             Text(
-              'Enter the email associated with your account and we\'ll send you a link to reset your password.',
+              'Enter the username associated with your account and we\'ll send you a link to reset your password.',
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: const Color(0xFF718096),
               ),
@@ -580,7 +665,7 @@ class _LoginScreenState extends State<LoginScreen> {
             
             // Email field
             Text(
-              'Email address',
+              'Username address',
               style: theme.textTheme.labelMedium?.copyWith(
                 color: const Color(0xFF4A5568),
               ),
@@ -595,7 +680,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: const Color(0xFF2D3748),
               ),
               decoration: InputDecoration(
-                hintText: 'Enter your email',
+                hintText: 'Enter your username',
                 hintStyle: theme.textTheme.bodyMedium?.copyWith(
                   color: const Color(0xFFA0AEC0),
                 ),
@@ -612,7 +697,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   vertical: 14, horizontal: 16),
               ),
             ),
-           
             const SizedBox(height: 24),
             
             // Submit button

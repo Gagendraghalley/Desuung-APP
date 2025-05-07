@@ -136,7 +136,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
               ),
-               _createDrawerItem(
+
+                _createDrawerItem(
                 icon: Icons.calendar_today,
                 text: "Attendance",
                 onTap: () {
