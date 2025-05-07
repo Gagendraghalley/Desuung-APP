@@ -242,6 +242,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
       body: Stack(
         children: [
           // Professional background with subtle gradient
@@ -338,34 +341,33 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       drawer: Drawer(
         child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
+          padding: EdgeInsets.zero, // Important: remove default padding
+          children: <Widget>[ // Use <Widget> to specify the type
+            const DrawerHeader( // A standard header for the drawer
               decoration: BoxDecoration(
-                color: Color(0xFF4299E1),
+                color: Color(0xFF4299E1), // Customize header color
               ),
-              child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
+              child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 24)), // Header text
             ),
- // Remove the old Home and Announcement items
-            ListTile(
- leading: const Icon(Icons.article),
- title: const Text('News'), // Use a descriptive text
+            ListTile( // ListTile for the News item
+              leading: const Icon(Icons.article), // Icon for News
+              title: const Text('News'), // Text for News item
               onTap: () {
- Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => NewsScreen()));
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(context, MaterialPageRoute(builder: (context) => NewsScreen())); // Navigate to NewsScreen
               },
             ),
- ListTile(
- leading: const Icon(Icons.announcement),
- title: const Text('Announcements'), // Use a descriptive text
- onTap: () {
- Navigator.pop(context); // Close the drawer
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AnnouncementBeforeLoginScreen()));
+            ListTile( // ListTile for the Announcements item
+              leading: const Icon(Icons.announcement), // Icon for Announcements
+              title: const Text('Announcements'), // Text for Announcements item
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AnnouncementBeforeLoginScreen())); // Navigate to AnnouncementBeforeLoginScreen
               },
             ),
-          ],
-      ),
-      )
+          ], // Ensure you have a closing parenthesis and semicolon for ListView children
+        ), // Closing parenthesis for ListView
+      ), // Closing parenthesis for Drawer
     );
   }
 
