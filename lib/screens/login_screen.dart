@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dashboard_screen.dart';
-
+import 'dashboard_screen.dart'; // Keep this import for MenuName
+import 'announcement_before_login_screen.dart'; // New import
+import 'news_screen.dart'; // New import
+ 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -13,12 +15,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _forgotPasswordEmailController = TextEditingController();
-  
+
   String _errorMessage = '';
   bool _isForgotPasswordScreenVisible = false;
   bool _isLoading = false;
   bool _obscurePassword = true;
-  
+
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _forgotPasswordEmailFocusNode = FocusNode();
@@ -36,19 +38,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     setState(() {
       _errorMessage = '';
       _isLoading = true;
     });
 
     await Future.delayed(const Duration(seconds: 1));
-    
+
     if (mounted) {
       setState(() {
         _isLoading = false;
       });
-      
+
       if (_emailController.text == 'test@gmail.com' && 
           _passwordController.text == 'password') {
         Navigator.pushReplacement(
@@ -56,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
           PageRouteBuilder(
             pageBuilder: (_, __, ___) => const DashboardScreen(),
             transitionsBuilder: (_, a, __, c) => 
-              FadeTransition(opacity: a, child: c),
+            FadeTransition(opacity: a, child: c),
             transitionDuration: const Duration(milliseconds: 500),
           ),
         );
@@ -76,9 +78,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     await Future.delayed(const Duration(seconds: 1)); // Simulate network call
-    
+
     if (mounted) {
-      setState(() => _isLoading = false);
+      setState(() => _isLoading = false); // Corrected syntax
       
       if (!_forgotPasswordEmailController.text.contains('@')) {
         setState(() => _errorMessage = 'Please enter a valid email');
@@ -193,6 +195,50 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Return an empty container or a basic widget if in password recovery mode
+    if (_isForgotPasswordScreenVisible) {
+      return Scaffold(
+        body: Stack(
+          children: [
+            // Professional background with subtle gradient
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 236, 190, 130),
+                    Color.fromARGB(255, 244, 215, 193),
+                  ],
+                ),
+              ),
+            ),
+
+            // Decorative elements with better positioning (optional, can be removed)
+            Positioned(
+              top: -MediaQuery.of(context).size.width * 0.2,
+              right: -MediaQuery.of(context).size.width * 0.1,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.width * 0.6,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFFEBF8FF).withOpacity(0.8),
+                      const Color(0xFFEBF8FF).withOpacity(0),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Main content
+            SafeArea(child: Center(child: _buildForgotPasswordForm(theme))),
+          ],
+        ),
+      );
+    }
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -210,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-          ),
+          ), // Background and decorative elements...
           
           // Decorative elements with better positioning
           Positioned(
@@ -248,27 +294,24 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          
+
           // Main content
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
+ mainAxisSize: MainAxisSize.min,
                   children: [
                     // Simplified logo presentation
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        height: 80,
-                        filterQuality: FilterQuality.high,
-                      ),
+ child: Image.asset('assets/images/logo.png', height: 80), // Simplified logo
                     ),
                     const SizedBox(height: 48),
                     
                     // Form container with better shadow and border
+
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 420),
                       child: AnimatedSwitcher(
@@ -278,7 +321,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             : _buildLoginForm(theme),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
                     Text(
                       '© 2025 De-suung. All rights reserved.',
@@ -293,6 +336,36 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color(0xFF4299E1),
+              ),
+              child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 24)),
+            ),
+ // Remove the old Home and Announcement items
+            ListTile(
+ leading: const Icon(Icons.article),
+ title: const Text('News'), // Use a descriptive text
+              onTap: () {
+ Navigator.pop(context); // Close the drawer
+                Navigator.push(context, MaterialPageRoute(builder: (context) => NewsScreen()));
+              },
+            ),
+ ListTile(
+ leading: const Icon(Icons.announcement),
+ title: const Text('Announcements'), // Use a descriptive text
+ onTap: () {
+ Navigator.pop(context); // Close the drawer
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AnnouncementBeforeLoginScreen()));
+              },
+            ),
+          ],
+      ),
+      )
     );
   }
 
