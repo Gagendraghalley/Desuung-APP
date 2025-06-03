@@ -1,7 +1,7 @@
 import 'package:desuungapp/config/theme.dart';
 import 'package:flutter/material.dart';
 
-import '../config/app_constants.dart';
+import '../../config/app_constants.dart';
 
 class NotificationScreen extends StatelessWidget {
   final List<NotificationItem> notifications = [

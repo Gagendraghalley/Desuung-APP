@@ -1,9 +1,10 @@
+import 'package:desuungapp/screens/login/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'config/theme.dart';
-import 'screens/login_screen.dart';
-import 'screens/attendance_screen.dart';
-import 'screens/dashboard_screen.dart';
+import '../screens/login/login_screen.dart';
+import 'screens/attendance/attendance_screen.dart';
+import 'screens/dashboard/dashboard_screen.dart';
 
 
 void main() {
@@ -18,7 +19,7 @@ class DeSuung extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Desuung App',
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.light,
       darkTheme: AppTheme.darkTheme,

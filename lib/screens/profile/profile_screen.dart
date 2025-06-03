@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../config/theme.dart';
-import '../config/api_endpoints.dart';
-import '../widgets/profile_detail_card.dart';
-import 'change_password_screen.dart';
+import '../../../config/theme.dart';
+import '../../config/api_endpoints.dart';
+import '../../widgets/profile_detail_card.dart';
+import '../change_password_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

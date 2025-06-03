@@ -1,15 +1,15 @@
 import 'package:desuungapp/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../config/theme.dart';
-import 'announcement_screen.dart'; // Keep AnnouncementScreen import if still used in drawer or elsewhere
-import 'notification_screen.dart';
-import 'profile_screen.dart';
-import 'settings_screen.dart';
-import 'login_screen.dart';
-import 'attendance_screen.dart';
+import '../../config/theme.dart';
+import '../announcement/announcement_screen.dart'; // Keep AnnouncementScreen import if still used in drawer or elsewhere
+import '../notification/notification_screen.dart';
+import '../profile/profile_screen.dart';
+import '../settings_screen.dart';
+import '../login/login_screen.dart';
+import '../attendance/attendance_screen.dart';
 
-import '../config/app_constants.dart';
+import '../../config/app_constants.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
