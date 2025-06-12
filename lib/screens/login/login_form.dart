@@ -11,21 +11,29 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
   String _errorMessage = '';
   bool _isLoading = false;
   bool _obscurePassword = true;
 
-  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _usernameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    // Set default test credentials
+    _usernameController.text = 'admin@gmail.com';
+    _passwordController.text = 'admin123';
+  }
+
+  @override
   void dispose() {
-    _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
-    _emailFocusNode.dispose();
+    _usernameFocusNode.dispose();
     _passwordFocusNode.dispose();
     super.dispose();
   }
@@ -45,7 +53,7 @@ class _LoginFormState extends State<LoginForm> {
         _isLoading = false;
       });
 
-      if (_emailController.text == 'admin@gmail.com' && 
+      if (_usernameController.text == 'admin@gmail.com' && 
           _passwordController.text == 'admin123') {
         Navigator.pushReplacement(
           context,
@@ -58,7 +66,7 @@ class _LoginFormState extends State<LoginForm> {
         );
       } else {
         setState(() {
-          _errorMessage = 'Invalid email or password';
+          _errorMessage = 'Invalid username or password';
           _passwordController.clear();
         });
       }
@@ -70,47 +78,25 @@ class _LoginFormState extends State<LoginForm> {
     final theme = Theme.of(context);
     
     return Container(
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 5,
+            blurRadius: 10,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
-      padding: const EdgeInsets.all(32),
       child: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Header with logo
-            Column(
-              children: [
-                Image.asset('assets/images/logo.png', height: 60),
-                const SizedBox(height: 32),
-                Text(
-                  'Sign In',
-                  style: theme.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Please enter your credentials to continue',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 32),
-            
             // Error message
             if (_errorMessage.isNotEmpty)
               Container(
@@ -118,10 +104,6 @@ class _LoginFormState extends State<LoginForm> {
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.red.shade100,
-                    width: 1,
-                  ),
                 ),
                 child: Row(
                   children: [
@@ -141,88 +123,53 @@ class _LoginFormState extends State<LoginForm> {
             if (_errorMessage.isNotEmpty) const SizedBox(height: 16),
             
             // Username field
-            Text(
-              'Username',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey.shade700,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
             TextFormField(
-              controller: _emailController,
-              focusNode: _emailFocusNode,
+              controller: _usernameController,
+              focusNode: _usernameFocusNode,
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: Colors.black87,
-              ),
               decoration: InputDecoration(
-                hintText: 'Username',
-                hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey.shade400,
-                ),
-                prefixIcon: Icon(Icons.email_outlined, color: Colors.grey.shade500),
-                filled: true,
-                fillColor: Colors.grey.shade50,
+                labelText: 'Username',
+                hintText: 'Enter your username',
+                prefixIcon: const Icon(Icons.person_outline),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 16, horizontal: 16),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter your username';
                 }
+                if (!value.contains('@')) {
+                  return 'Please enter a valid username';
+                }
                 return null;
               },
             ),
-            const SizedBox(height: 16),
-            
+            const SizedBox(height: 20),
+                        
             // Password field
-            Text(
-              'Password',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey.shade700,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 8),
             TextFormField(
               controller: _passwordController,
               focusNode: _passwordFocusNode,
               obscureText: _obscurePassword,
               textInputAction: TextInputAction.done,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: Colors.black87,
-              ),
               decoration: InputDecoration(
-                hintText: '••••••••',
-                hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey.shade400,
-                  letterSpacing: 2,
-                ),
-                prefixIcon: Icon(Icons.lock_outlined, color: Colors.grey.shade500),
+                labelText: 'Password',
+                hintText: 'Enter your password',
+                prefixIcon: const Icon(Icons.lock_outline),
                 suffixIcon: IconButton(
                   icon: Icon(
                     _obscurePassword 
                       ? Icons.visibility_outlined 
                       : Icons.visibility_off_outlined,
-                    color: Colors.grey.shade500,
                   ),
                   onPressed: () => setState(
                     () => _obscurePassword = !_obscurePassword),
                 ),
-                filled: true,
-                fillColor: Colors.grey.shade50,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide.none,
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 16, horizontal: 16),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -233,6 +180,7 @@ class _LoginFormState extends State<LoginForm> {
                 }
                 return null;
               },
+              onFieldSubmitted: (_) => _login(),
             ),
             const SizedBox(height: 8),
             
@@ -249,54 +197,35 @@ class _LoginFormState extends State<LoginForm> {
                   );
                 },
                 style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size.zero,
-                ),
-                child: Text(
-                  'Forgot password?',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.primaryColor,
-                    fontWeight: FontWeight.w500,
+                  foregroundColor: Color.fromARGB(255, 230, 134, 44),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
                   ),
                 ),
+                child: const Text('Forgot password?'),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             
             // Sign in button
             ElevatedButton(
-              onPressed: _isLoading ? null : _login,
+              onPressed: _login,
               style: ElevatedButton.styleFrom(
-                backgroundColor: theme.primaryColor,
-                foregroundColor: Colors.white,
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: Color.fromARGB(255, 230, 134, 44),
+                foregroundColor: Colors.white, 
+                minimumSize: Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                shadowColor: Colors.transparent,
               ),
-              child: _isLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Colors.white),
-                      ),
-                    )
-                  : Text(
-                      'Sign In',
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+              child: Text(
+                'Sign In',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
-            const SizedBox(height: 24),
-            
-            ],
+            const SizedBox(height: 16),
+          ],
         ),
       ),
     );

@@ -46,9 +46,6 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Announcements'),
-      ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16.0),
         itemCount: announcements.length,

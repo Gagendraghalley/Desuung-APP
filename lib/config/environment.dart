@@ -1,7 +1,7 @@
 class Environment {
   static String getEnvironment() {
     const String environment =
-        'dev'; // Change this to 'prod' for production environment
+        'dev';
     return environment;
   }
 

@@ -20,10 +20,6 @@ class CopyrightText extends StatelessWidget {
       padding: padding,
       child: Column(
         children: [
-          if (showDivider) ...[
-            const Divider(height: 1, thickness: 1),
-            const SizedBox(height: 16),
-          ],
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

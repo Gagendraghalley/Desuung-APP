@@ -1,14 +1,13 @@
-import 'package:desuungapp/widgets/custom_app_bar.dart';
+import 'package:desuungapp/screens/attendance/attendance_index.dart';
 import 'package:flutter/material.dart';
-
+import 'package:desuungapp/widgets/custom_app_bar.dart';
 import '../../config/theme.dart';
-import '../announcement/announcement_screen.dart'; // Keep AnnouncementScreen import if still used in drawer or elsewhere
+import '../announcement/announcement_screen.dart';
 import '../notification/notification_screen.dart';
 import '../profile/profile_screen.dart';
 import '../settings_screen.dart';
 import '../login/login_screen.dart';
 import '../attendance/attendance_screen.dart';
-
 import '../../config/app_constants.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -20,229 +19,364 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentPageIndex = 0;
+  final Color _accentColor = const Color.fromARGB(255, 230, 134, 44);
+  final Color _backgroundColor = const Color.fromARGB(255, 248, 248, 248);
 
-  final List<Map<String, dynamic>> _activities = [
-    {
-      'title': 'Activity 1',
-      'time': '10:00 AM',
-      'icon': Icons.check_circle_outline,
-      'color': Colors.green
-    },
-    {
-      'title': 'Activity 2',
-      'time': '11:30 AM',
-      'icon': Icons.warning,
-      'color': Colors.orange
-    },
-    {
-      'title': 'Activity 3',
-      'time': '02:00 PM',
-      'icon': Icons.error_outline,
-      'color': Colors.red
-    },
-    {
-      'title': 'Activity 4',
-      'time': '04:45 PM',
-      'icon': Icons.check_circle_outline,
-      'color': Colors.green
-    },
-  ];
+  // Map to store page titles
+  final Map<int, String> _pageTitles = {
+    0: 'Dashboard',
+    1: 'Announcements',
+    2: 'Profile',
+    3: 'Settings',
+  };
 
   final List<Widget> _widgetOptions = <Widget>[
-    const Center(child: Text('Home Screen Content')), // Placeholder for Home screen content
-    AnnouncementScreen(),
-    ProfileScreen(),
-    SettingsScreen(),
+    const Center(child: Text('Home Screen Content')),
+    const AnnouncementScreen(),
+    const ProfileScreen(),
+    const SettingsScreen(),
   ];
-  
-   void _logOut() {
-    print("logging out");
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-    );
-    print("Logout");
-  }
-
-  List<Widget> _buildWidgetOptions() {
-    return _widgetOptions;
-  }
-  
-   Widget _buildActivityGrid(List<Map<String, dynamic>> activities) {
-    return const Center(child: Text('Empty screen'),);
-    // return Container(
-    //   padding: const EdgeInsets.all(16.0),
-    //   child: GridView.builder(
-    //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-    //       crossAxisCount: 2,
-    //       crossAxisSpacing: 16,
-    //       mainAxisSpacing: 16,
-    //       childAspectRatio: 1.5,
-    //     ),
-    //     itemCount: activities.length,
-    //     itemBuilder: (context, index) => _buildCard(activities[index]),
-    //   ),
-    // );
-  }
-
-  void _onItemTapped(int index) {
-    setState(() => _currentPageIndex = index);
-  }
 
   @override
   Widget build(BuildContext context) {
-    int _notificationCount = 5; // Example notification count
-
     return Scaffold(
-        appBar: CustomAppBar(
-          title: 'Dashboard', // You can change this title as needed
-          actions: [
-            Stack( // Use Stack to position the badge over the icon
-              children: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.notifications),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationScreen()));
-                  },
-                ),
-                if (_notificationCount > 0) // Only show badge if count > 0
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      constraints: const BoxConstraints(minWidth: 12, minHeight: 12),
-                      child: Text(
-                        '$_notificationCount',
-                        style: const TextStyle(color: Colors.white, fontSize: 8),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ]),
-        drawer: Drawer(
-          backgroundColor: AppTheme.lightTheme.canvasColor.withOpacity(0.8),
-          child: ListView(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.only(top: 40, bottom: 20),
-                decoration: BoxDecoration(
-                  color: AppTheme.lightTheme.primaryColor,
-                ),
-                child:  Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children:  <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(Icons.person, color: AppTheme.lightTheme.primaryColor),
-                    ),
-                  ],
-                ),
-              ),
-              _createDrawerItem(
-                icon: Icons.dashboard,
-                text: MenuName.home.value,
-                onTap: () {
-                  _onItemTapped(0);
-                  Navigator.pop(context);
-                },
-                isSelected: _currentPageIndex == 0,
-              ),
-              _createDrawerItem(
-                icon: Icons.announcement,
-                text: MenuName.announcement.value,
-                onTap: () {
-                  Navigator.pop(context);
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AnnouncementScreen()),
-                  );
-                },
-              ),
-
-                _createDrawerItem(
-                icon: Icons.calendar_today,
-                text: "Attendance",
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AttendanceScreen()),
-                  );
-                },),
-              const Divider(),
-              _createDrawerItem(
-                icon: Icons.logout,
-                text: MenuName.logout.value,
-                onTap: () {
-                  _logOut();
-                },
-              ),
-            ],
-          ),
-        ),
-        body: _buildWidgetOptions().elementAt(_currentPageIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: AppTheme.lightTheme.primaryColor,
-          selectedItemColor: Colors.black,
-          unselectedItemColor: Colors.black,
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.announcement), label: 'Announcement'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person), label: 'Profile'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), label: 'Settings'),
-          ],
-          currentIndex: _currentPageIndex,
-          selectedFontSize: 12,
-          unselectedFontSize: 10,
-          onTap: _onItemTapped,
-        ));
-    
-  }
-
-  Widget _createDrawerItem({
-    required IconData icon,
-    required String text,
-    required GestureTapCallback onTap,
-    bool isSelected = false,
-  }) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isSelected ? AppTheme.lightTheme.primaryColor : AppTheme.inactiveIconColor,
-      ),
-      title: Text(text),
-      onTap: onTap,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-    selectedColor: AppTheme.lightTheme.primaryColor,
-    selected: isSelected,
+      backgroundColor: _backgroundColor,
+      appBar: _buildAppBar(),
+      drawer: _buildMaterialDrawer(),
+      body: _buildContent(),
+      bottomNavigationBar: _buildBottomNavBar(),
     );
   }
 
-  Widget _buildCard(Map<String, dynamic> activity) {
-    
-    return Card(
-      child: ListTile(
-        leading: Icon(activity['icon'], size: 32, color: activity['color']),
-        title: Text(activity['title'],
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-        subtitle: Text(activity['time'],
-            style: TextStyle(color: Colors.grey[600])),
-        trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      title: Text(
+        _pageTitles[_currentPageIndex] ?? 'Dashboard',
+        style: const TextStyle(fontWeight: FontWeight.w600),
       ),
+      centerTitle: true,
+      elevation: 2,
+      backgroundColor: Colors.white,
+      iconTheme: IconThemeData(color: _accentColor),
+      actions: [_buildNotificationButton()],
+    );
+  }
+
+  Widget _buildNotificationButton() {
+    return Stack(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.notifications_outlined),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NotificationScreen()),
+          ),
+        ),
+        Positioned(
+          right: 8,
+          top: 8,
+          child: Container(
+            width: 16,
+            height: 16,
+            decoration: const BoxDecoration(
+              color: Colors.red,
+              shape: BoxShape.circle,
+            ),
+            child: const Center(
+              child: Text(
+                '10',
+                style: TextStyle(color: Colors.white, fontSize: 10),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMaterialDrawer() {
+    return Drawer(
+      elevation: 16,
+      width: MediaQuery.of(context).size.width * 0.75,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
+      ),
+      child: Column(
+        children: [
+          _buildDrawerHeader(),
+          Expanded(child: _buildDrawerMenu()),
+          _buildDrawerFooter(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerHeader() {
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        padding: const EdgeInsets.only(
+          top: 28,
+          bottom: 24,
+          left: 20,
+          right: 20,
+        ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              _accentColor.withOpacity(0.12),
+              _accentColor.withOpacity(0.08),
+            ],
+          ),
+          border: Border(
+            bottom: BorderSide(
+              color: Colors.grey.withOpacity(0.15),
+              width: 1.2,
+            ),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    _accentColor.withOpacity(0.15),
+                    _accentColor.withOpacity(0.25),
+                  ],
+                ),
+                border: Border.all(
+                  color: _accentColor.withOpacity(0.4),
+                  width: 1.8,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.12),
+                    blurRadius: 10,
+                    spreadRadius: 1.5,
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.person,
+                size: 40,
+                color: Colors.white.withOpacity(0.9),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                'De-suung',
+                style: const TextStyle(
+                  fontSize: 18.5,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                  letterSpacing: 0.2,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(height: 6),
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                'desuung@gmail.com',
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: 14.5,
+                  letterSpacing: 0.1,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerMenu() {
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        _buildDrawerItem(
+          icon: Icons.dashboard_outlined,
+          activeIcon: Icons.dashboard_rounded,
+          text: MenuName.home.value,
+          isActive: _currentPageIndex == 0,
+          onTap: () => _navigateToPage(0),
+        ),
+        _buildDrawerItem(
+          icon: Icons.announcement_outlined,
+          activeIcon: Icons.announcement_rounded,
+          text: MenuName.announcement.value,
+          isActive: _currentPageIndex == 1,
+          onTap: () => _navigateToPage(1),
+        ),
+        _buildDrawerItem(
+          icon: Icons.calendar_today_outlined,
+          activeIcon: Icons.calendar_today_rounded,
+          text: "Attendance",
+          onTap: () => _navigateToScreen(const AttendanceIndexScreen(), "Attendance"),
+        ),
+        _buildDrawerItem(
+          icon: Icons.calendar_today_outlined,
+          activeIcon: Icons.event_available_rounded,
+          text: "Events",
+          onTap: () => _navigateToScreen(const AttendanceScreen(), "Events"),
+        ),
+        _buildDrawerItem(
+          icon: Icons.calendar_today_outlined,
+          activeIcon: Icons.model_training_rounded,
+          text: "Skilling Program",
+          onTap: () => _navigateToScreen(const AttendanceScreen(), "Skilling Program"),
+        ),
+        const Divider(height: 1, indent: 20, endIndent: 20),
+        _buildDrawerItem(
+          icon: Icons.logout_outlined,
+          activeIcon: Icons.logout_rounded,
+          text: MenuName.logout.value,
+          isLogout: true,
+          onTap: _logOut,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required IconData activeIcon,
+    required String text,
+    bool isActive = false,
+    bool isLogout = false,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(
+        isActive ? activeIcon : icon,
+        color: isLogout
+            ? Colors.red[400]
+            : isActive
+                ? _accentColor
+                : Colors.grey[700],
+        size: 24,
+      ),
+      title: Text(
+        text,
+        style: TextStyle(
+          fontSize: 15,
+          color: isLogout
+              ? Colors.red[400]
+              : isActive
+                  ? Colors.black
+                  : Colors.grey[700],
+          fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+        ),
+      ),
+      trailing: isActive
+          ? Icon(Icons.chevron_right, color: _accentColor, size: 18)
+          : null,
+      onTap: onTap,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      tileColor: isActive ? _accentColor.withOpacity(0.05) : null,
+    );
+  }
+
+  Widget _buildDrawerFooter() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Text(
+        'v1.0.0',
+        style: TextStyle(
+          color: Colors.grey[500],
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: _widgetOptions[_currentPageIndex],
+    );
+  }
+
+  Widget _buildBottomNavBar() {
+    return BottomNavigationBar(
+      backgroundColor: Colors.white,
+      selectedItemColor: _accentColor,
+      unselectedItemColor: Colors.grey[600],
+      selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w600),
+      currentIndex: _currentPageIndex,
+      type: BottomNavigationBarType.fixed,
+      elevation: 8,
+      items: _buildNavItems(),
+      onTap: (index) => setState(() => _currentPageIndex = index),
+    );
+  }
+
+  List<BottomNavigationBarItem> _buildNavItems() {
+    return [
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.home_outlined),
+        activeIcon: Icon(Icons.home_rounded),
+        label: 'Home',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.announcement_outlined),
+        activeIcon: Icon(Icons.announcement_rounded),
+        label: 'Announcement',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.person_outlined),
+        activeIcon: Icon(Icons.person_rounded),
+        label: 'Profile',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.settings_outlined),
+        activeIcon: Icon(Icons.settings_rounded),
+        label: 'Settings',
+      ),
+    ];
+  }
+
+  void _navigateToPage(int index) {
+    Navigator.pop(context);
+    setState(() => _currentPageIndex = index);
+  }
+
+  void _navigateToScreen(Widget screen, String title) {
+    Navigator.pop(context);
+    // Check if the screen is one of our main tabs
+    final index = _widgetOptions.indexWhere((w) => w.runtimeType == screen.runtimeType);
+    if (index >= 0) {
+      setState(() => _currentPageIndex = index);
+    } else {
+      Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
+    }
+  }
+
+  void _logOut() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
     );
   }
 }

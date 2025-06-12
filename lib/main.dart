@@ -1,11 +1,10 @@
-import 'package:desuungapp/screens/login/login_screen.dart';
+import 'package:desuungapp/screens/attendance/attendance_index.dart';
+import 'package:desuungapp/screens/login/splash_screen.dart';
 import 'package:flutter/material.dart';
-
-import 'config/theme.dart';
-import '../screens/login/login_screen.dart';
-import 'screens/attendance/attendance_screen.dart';
-import 'screens/dashboard/dashboard_screen.dart';
-
+import 'package:desuungapp/config/theme.dart';
+import 'package:desuungapp/screens/login/login_screen.dart';
+import 'package:desuungapp/screens/attendance/attendance_screen.dart';
+import 'package:desuungapp/screens/dashboard/dashboard_screen.dart';
 
 void main() {
   runApp(const DeSuung());
@@ -14,21 +13,41 @@ void main() {
 class DeSuung extends StatelessWidget {
   const DeSuung({super.key});
 
-  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Desuung App',
       theme: AppTheme.lightTheme,
-      themeMode: ThemeMode.light,
-      darkTheme: AppTheme.darkTheme,
-      home: LoginScreen(),
+      home: const BackgroundWrapper(child: SplashScreen()),
       routes: {
-        '/attendance': (context) => AttendanceScreen(),
+        '/attendance': (context) => const BackgroundWrapper(child: AttendanceIndexScreen()),
+        '/dashboard': (context) => const BackgroundWrapper(child: DashboardScreen()),
       },
     );
   }
-} 
+}
 
+class BackgroundWrapper extends StatelessWidget {
+  final Widget child;
+  
+  const BackgroundWrapper({
+    super.key,
+    required this.child,
+  });
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bg.jpeg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(child: child),
+      ),
+    );
+  }
+}

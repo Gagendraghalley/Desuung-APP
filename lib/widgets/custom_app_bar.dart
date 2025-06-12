@@ -1,6 +1,5 @@
+import 'package:desuungapp/screens/announcement/announcement_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import '../config/app_constants.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -11,32 +10,41 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
+  /// Builds a custom app bar.
+  ///
+  /// The app bar is titled with [title] and has a white background.
+  /// There is a single action that navigates to the AnnouncementScreen when pressed.
+  /// The action is a blueGrey person icon in a white circle avatar.
   Widget build(BuildContext context) {
     return AppBar(
-      
       title: Text(
-        title,
-        style: GoogleFonts.roboto(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
+        title, 
+        style: TextStyle(
+          fontSize: 20, 
+          fontWeight: FontWeight.bold, 
+          color: const Color.fromARGB(255, 230, 134, 44), 
         ),
       ),
       centerTitle: true,
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: Color.fromARGB(255, 238, 236, 233),
       actions: [
         IconButton(
           icon: const CircleAvatar(
-            backgroundColor: Colors.grey,
-            child: Icon(
-              Icons.account_circle_rounded,
+            backgroundColor: Colors.white, // Change CircleAvatar background to white
+            child: Icon( 
+              Icons.person, 
               color: Colors.blueGrey,
               size: 28,
             ),
           ),
           padding: const EdgeInsets.only(right: 20),
-            onPressed: () {
-            print("profile icon pressed");
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AnnouncementScreen(),
+              ),
+            );
           },
         ),
       ],
