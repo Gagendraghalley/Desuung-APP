@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:desuungapp/screens/attendance/attendance_index.dart';
 import 'package:desuungapp/screens/events/events_index.dart';
-import 'package:flutter/material.dart';
 import 'package:desuungapp/widgets/custom_app_bar.dart';
 import '../../config/theme.dart';
 import '../announcement/announcement_screen.dart';
@@ -35,6 +35,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final Color _accentColor = const Color.fromARGB(255, 230, 134, 44);
   final Color _backgroundColor = const Color.fromARGB(255, 248, 248, 248);
 
+  // Sample data for dashboard metrics
+  final Map<String, dynamic> _dashboardMetrics = {
+    'totalDesuups': 1248,
+    'activeEvents': 24,
+    'trainingPrograms': 12,
+    'attendanceRate': 86,
+  };
+
   final Map<int, String> _pageTitles = {
     0: 'Dashboard',
     1: 'Announcements',
@@ -54,7 +62,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   };
 
   final List<Widget> _widgetOptions = <Widget>[
-    const Center(child: Text('Home Screen Content')),
+    const SizedBox(),
     const AnnouncementScreen(),
     const ProfileScreen(),
     const SettingsScreen(),
@@ -128,22 +136,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-Widget _buildMaterialDrawer() {
-  return Drawer(
-    elevation: 16,
-    width: MediaQuery.of(context).size.width * 0.75,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
-    ),
-    child: Column(
-      children: [
-        _buildDrawerHeader(),
-        Expanded(child: _buildDrawerMenu()),
-        _buildDrawerFooter(),
-      ],
-    ),
-  );
-}
+  Widget _buildMaterialDrawer() {
+    return Drawer(
+      elevation: 16,
+      width: MediaQuery.of(context).size.width * 0.75,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
+      ),
+      child: Column(
+        children: [
+          _buildDrawerHeader(),
+          Expanded(child: _buildDrawerMenu()),
+          _buildDrawerFooter(),
+        ],
+      ),
+    );
+  }
 
   Widget _buildDrawerHeader() {
     return SizedBox(
@@ -357,7 +365,365 @@ Widget _buildMaterialDrawer() {
   Widget _buildContent() {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
-      child: _widgetOptions[_currentPageIndex],
+      child: _currentPageIndex == 0 ? _buildHomeDashboard() : _widgetOptions[_currentPageIndex],
+    );
+  }
+
+  Widget _buildHomeDashboard() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Welcome Card
+          _buildWelcomeCard(),
+          const SizedBox(height: 24),
+          
+          // Summary Metrics Section - Redesigned
+          _buildRedesignedSummarySection(),
+          const SizedBox(height: 24),
+          
+          // Recent Activities Section
+          _buildRecentActivitiesSection(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRedesignedSummarySection() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 12),
+      GridView.count(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 1.6,
+        children: [
+          _buildSummaryActionCard(
+            icon: Icons.people_outline,
+            title: 'Total Desuups',
+            value: _dashboardMetrics['totalDesuups'].toString(),
+            color: Colors.blue.shade700,
+            onTap: () {},
+          ),
+          _buildSummaryActionCard(
+            icon: Icons.event_available,
+            title: 'Active Events',
+            value: _dashboardMetrics['activeEvents'].toString(),
+            color: Colors.green.shade700,
+            onTap: () {},
+          ),
+          _buildSummaryActionCard(
+            icon: Icons.school_outlined,
+            title: 'Training Programs',
+            value: _dashboardMetrics['trainingPrograms'].toString(),
+            color: Colors.orange.shade700,
+            onTap: () {}
+          ),
+          _buildSummaryActionCard(
+            icon: Icons.percent_outlined,
+            title: 'Attendance Rate',
+            value: '${_dashboardMetrics['attendanceRate']}%',
+            color: Colors.purple.shade700,
+            onTap: () {},
+          ),
+        ],
+      ),
+    ],
+  );
+}
+
+Widget _buildSummaryActionCard({
+  required IconData icon,
+  required String title,
+  required String value,
+  required Color color,
+  required VoidCallback onTap,
+}) {
+  return Card(
+    elevation: 1,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: onTap,
+      hoverColor: color.withOpacity(0.05),
+      splashColor: color.withOpacity(0.1),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        constraints: BoxConstraints(minHeight: 80), // Smaller card size
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: color.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 18,
+                    color: color,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: color,
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey.shade700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+  Widget _buildWelcomeCard() {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: Colors.grey.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: [
+                    _accentColor.withOpacity(0.1),
+                    _accentColor.withOpacity(0.3),
+                  ],
+                ),
+              ),
+              child: Icon(
+                Icons.person,
+                size: 30,
+                color: _accentColor,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome back,',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'De-suung Member',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Last login: Today, ${TimeOfDay.now().format(context)}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMetricCard({
+    required IconData icon,
+    required String title,
+    required String value,
+    required Color color,
+  }) {
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {},
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                color.withOpacity(0.05),
+                color.withOpacity(0.15),
+              ],
+            ),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(icon, size: 28, color: color),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                value,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: color,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecentActivitiesSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Recent Activities',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: BorderSide(
+              color: Colors.grey.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                _buildActivityListItem(
+                  icon: Icons.event_available,
+                  title: 'Cleanup Program Attendance',
+                  subtitle: '86 Desuups participated',
+                  time: 'Today, 08:00 AM',
+                  color: Colors.green,
+                ),
+                const Divider(height: 1),
+                _buildActivityListItem(
+                  icon: Icons.notifications,
+                  title: 'New Announcement',
+                  subtitle: 'Upcoming training schedule',
+                  time: 'Yesterday, 03:15 PM',
+                  color: Colors.blue,
+                ),
+                const Divider(height: 1),
+                _buildActivityListItem(
+                  icon: Icons.school,
+                  title: 'Training Completed',
+                  subtitle: 'Basic Carpentry Workshop',
+                  time: '2 days ago',
+                  color: Colors.orange,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActivityListItem({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String time,
+    required Color color,
+  }) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      leading: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          size: 20,
+          color: color,
+        ),
+      ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(subtitle),
+      trailing: Text(
+        time,
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.grey[500],
+        ),
+      ),
     );
   }
 
