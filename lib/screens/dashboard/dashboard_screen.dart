@@ -1,4 +1,5 @@
 import 'package:desuungapp/screens/attendance/attendance_index.dart';
+import 'package:desuungapp/screens/events/events_index.dart';
 import 'package:flutter/material.dart';
 import 'package:desuungapp/widgets/custom_app_bar.dart';
 import '../../config/theme.dart';
@@ -10,6 +11,17 @@ import '../login/login_screen.dart';
 import '../attendance/attendance_screen.dart';
 import '../../config/app_constants.dart';
 
+enum ActiveMenu {
+  home,
+  attendance,
+  events,
+  skillingProgram,
+  announcements,
+  profile,
+  settings,
+  logout
+}
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -19,15 +31,26 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentPageIndex = 0;
+  ActiveMenu _activeMenu = ActiveMenu.home;
   final Color _accentColor = const Color.fromARGB(255, 230, 134, 44);
   final Color _backgroundColor = const Color.fromARGB(255, 248, 248, 248);
 
-  // Map to store page titles
   final Map<int, String> _pageTitles = {
     0: 'Dashboard',
     1: 'Announcements',
     2: 'Profile',
     3: 'Settings',
+  };
+
+  final Map<ActiveMenu, String> _menuTitles = {
+    ActiveMenu.home: MenuName.home.value,
+    ActiveMenu.attendance: "Attendance",
+    ActiveMenu.events: "Events",
+    ActiveMenu.skillingProgram: "Skilling Program",
+    ActiveMenu.announcements: "Announcements",
+    ActiveMenu.profile: "Profile",
+    ActiveMenu.settings: "Settings",
+    ActiveMenu.logout: MenuName.logout.value,
   };
 
   final List<Widget> _widgetOptions = <Widget>[
@@ -49,9 +72,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   PreferredSizeWidget _buildAppBar() {
+    String title;
+    if (_activeMenu == ActiveMenu.attendance) {
+      title = _menuTitles[ActiveMenu.attendance]!;
+    } else if (_activeMenu == ActiveMenu.events) {
+      title = _menuTitles[ActiveMenu.events]!;
+    } else if (_activeMenu == ActiveMenu.skillingProgram) {
+      title = _menuTitles[ActiveMenu.skillingProgram]!;
+    } else {
+      title = _pageTitles[_currentPageIndex] ?? 'Dashboard';
+    }
+
     return AppBar(
       title: Text(
-        _pageTitles[_currentPageIndex] ?? 'Dashboard',
+        title,
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       centerTitle: true,
@@ -94,22 +128,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildMaterialDrawer() {
-    return Drawer(
-      elevation: 16,
-      width: MediaQuery.of(context).size.width * 0.75,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
-      ),
-      child: Column(
-        children: [
-          _buildDrawerHeader(),
-          Expanded(child: _buildDrawerMenu()),
-          _buildDrawerFooter(),
-        ],
-      ),
-    );
-  }
+Widget _buildMaterialDrawer() {
+  return Drawer(
+    elevation: 16,
+    width: MediaQuery.of(context).size.width * 0.75,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
+    ),
+    child: Column(
+      children: [
+        _buildDrawerHeader(),
+        Expanded(child: _buildDrawerMenu()),
+        _buildDrawerFooter(),
+      ],
+    ),
+  );
+}
 
   Widget _buildDrawerHeader() {
     return SizedBox(
@@ -215,41 +249,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _buildDrawerItem(
           icon: Icons.dashboard_outlined,
           activeIcon: Icons.dashboard_rounded,
-          text: MenuName.home.value,
-          isActive: _currentPageIndex == 0,
+          text: _menuTitles[ActiveMenu.home]!,
+          isActive: _activeMenu == ActiveMenu.home,
           onTap: () => _navigateToPage(0),
-        ),
-        _buildDrawerItem(
-          icon: Icons.announcement_outlined,
-          activeIcon: Icons.announcement_rounded,
-          text: MenuName.announcement.value,
-          isActive: _currentPageIndex == 1,
-          onTap: () => _navigateToPage(1),
         ),
         _buildDrawerItem(
           icon: Icons.calendar_today_outlined,
           activeIcon: Icons.calendar_today_rounded,
-          text: "Attendance",
-          onTap: () => _navigateToScreen(const AttendanceIndexScreen(), "Attendance"),
+          text: _menuTitles[ActiveMenu.attendance]!,
+          isActive: _activeMenu == ActiveMenu.attendance,
+          onTap: () => _navigateToScreen(
+            const AttendanceIndexScreen(), 
+            _menuTitles[ActiveMenu.attendance]!, 
+            ActiveMenu.attendance
+          ),
         ),
         _buildDrawerItem(
-          icon: Icons.calendar_today_outlined,
+          icon: Icons.event_outlined,
           activeIcon: Icons.event_available_rounded,
-          text: "Events",
-          onTap: () => _navigateToScreen(const AttendanceScreen(), "Events"),
+          text: _menuTitles[ActiveMenu.events]!,
+          isActive: _activeMenu == ActiveMenu.events,
+          onTap: () => _navigateToScreen(
+            const EventsIndex(), 
+            _menuTitles[ActiveMenu.events]!, 
+            ActiveMenu.events
+          ),
         ),
         _buildDrawerItem(
-          icon: Icons.calendar_today_outlined,
+          icon: Icons.model_training_outlined,
           activeIcon: Icons.model_training_rounded,
-          text: "Skilling Program",
-          onTap: () => _navigateToScreen(const AttendanceScreen(), "Skilling Program"),
+          text: _menuTitles[ActiveMenu.skillingProgram]!,
+          isActive: _activeMenu == ActiveMenu.skillingProgram,
+          onTap: () => _navigateToScreen(
+            const AttendanceScreen(), 
+            _menuTitles[ActiveMenu.skillingProgram]!, 
+            ActiveMenu.skillingProgram
+          ),
         ),
         const Divider(height: 1, indent: 20, endIndent: 20),
         _buildDrawerItem(
           icon: Icons.logout_outlined,
           activeIcon: Icons.logout_rounded,
-          text: MenuName.logout.value,
+          text: _menuTitles[ActiveMenu.logout]!,
           isLogout: true,
+          isActive: _activeMenu == ActiveMenu.logout,
           onTap: _logOut,
         ),
       ],
@@ -328,7 +371,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
       type: BottomNavigationBarType.fixed,
       elevation: 8,
       items: _buildNavItems(),
-      onTap: (index) => setState(() => _currentPageIndex = index),
+      onTap: (index) {
+        setState(() {
+          _currentPageIndex = index;
+          _activeMenu = [
+            ActiveMenu.home,
+            ActiveMenu.announcements,
+            ActiveMenu.profile,
+            ActiveMenu.settings
+          ][index];
+        });
+      },
     );
   }
 
@@ -359,15 +412,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _navigateToPage(int index) {
     Navigator.pop(context);
-    setState(() => _currentPageIndex = index);
+    setState(() {
+      _currentPageIndex = index;
+      _activeMenu = [
+        ActiveMenu.home,
+        ActiveMenu.announcements,
+        ActiveMenu.profile,
+        ActiveMenu.settings
+      ][index];
+    });
   }
 
-  void _navigateToScreen(Widget screen, String title) {
+  void _navigateToScreen(Widget screen, String title, ActiveMenu menu) {
     Navigator.pop(context);
-    // Check if the screen is one of our main tabs
+    setState(() => _activeMenu = menu);
+    
     final index = _widgetOptions.indexWhere((w) => w.runtimeType == screen.runtimeType);
     if (index >= 0) {
-      setState(() => _currentPageIndex = index);
+      setState(() {
+        _currentPageIndex = index;
+        _activeMenu = menu;
+      });
     } else {
       Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
     }

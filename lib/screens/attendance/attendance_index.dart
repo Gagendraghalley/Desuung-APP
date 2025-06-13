@@ -7,72 +7,91 @@ class AttendanceIndexScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isLargeScreen = MediaQuery.of(context).size.width > 600;
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: isDarkMode ? Colors.grey[900] : Colors.grey[50],
       appBar: AppBar(
-        title: const Text(
-          'Attendance Management',
-          style: TextStyle(fontWeight: FontWeight.w600),
+        title: Text(
+          'Attendance',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline),
-            onPressed: () {},
-            tooltip: 'Help',
-          ),
-        ],
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
+          padding: EdgeInsets.symmetric(
+            horizontal: isLargeScreen ? 32.0 : 20.0,
+            vertical: 24.0,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              const Text(
+              // **Header Section** (kept exactly as before)
+              Text(
                 'Welcome!',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.black87,
+                ),
               ),
-              const SizedBox(height: 4),
-              const Text(
-                'Manage attendance efficiently.',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
+              SizedBox(height: 8),
+              Text(
+                'Manage attendance with ease',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[700],
+                ),
               ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: _getCrossAxisCount(context),
-                  crossAxisSpacing: 9,
-                  mainAxisSpacing: 9,
-                  childAspectRatio: 6 / 4,
-                  children: [
-                    _buildFunctionCard(
-                      context,
-                      icon: Icons.edit_calendar_rounded,
-                      title: 'Take Attendance',
-                      subtitle: 'Record new attendance',
-                      color: const Color(0xFF5E35B1),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const AttendanceScreen()),
-                      ),
-                    ),
-                    _buildFunctionCard(
-                      context,
-                      icon: Icons.history_rounded,
-                      title: 'View Records',
-                      subtitle: 'Check past attendance',
-                      color: const Color(0xFF039BE5),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const AttendanceViewScreen()),
-                      ),
-                    ),
-                  ],
+              SizedBox(height: 32),
+
+              // NEW STATS SECTION (replacing the old cards)
+              _buildStatsSection(context),
+              SizedBox(height: 32),
+
+              // Quick Actions Title
+              Text(
+                'Quick Actions',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              SizedBox(height: 16),
+
+              // Action Cards
+              _buildActionCard(
+                context,
+                icon: Icons.edit_calendar_rounded,
+                title: 'Take Attendance',
+                subtitle: 'Record new attendance entries',
+                color: const Color(0xFF6A11CB),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AttendanceScreen()),
+                ),
+              ),
+              SizedBox(height: 16),
+              _buildActionCard(
+                context,
+                icon: Icons.history_rounded,
+                title: 'View Records',
+                subtitle: 'Check past attendance logs',
+                color: const Color(0xFF2575FC),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AttendanceViewScreen()),
                 ),
               ),
             ],
@@ -82,13 +101,106 @@ class AttendanceIndexScreen extends StatelessWidget {
     );
   }
 
-  int _getCrossAxisCount(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    if (width > 600) return 2;
-    return 1;
+  // NEW: Stats Section Widget
+  Widget _buildStatsSection(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 2,
+            offset: Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildStatItem(
+                value: '24',
+                label: 'Present Days',
+                color: Colors.green,
+              ),
+              _buildStatItem(
+                value: '2',
+                label: 'Absent Days',
+                color: Colors.red,
+              ),
+              _buildStatItem(
+                value: '92%',
+                label: 'Attendance Rate',
+                color: Colors.blue,
+              ),
+            ],
+          ),
+          SizedBox(height: 12),
+          LinearProgressIndicator(
+            value: 0.92,
+            backgroundColor: Colors.grey[200],
+            color: Colors.green[400],
+            minHeight: 8,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Monthly Progress',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                '92%',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.green[600],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget _buildFunctionCard(
+  // NEW: Stat Item Widget
+  Widget _buildStatItem({
+    required String value,
+    required String label,
+    required Color color,
+  }) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: color,
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // NEW: Action Card Widget
+  Widget _buildActionCard(
     BuildContext context, {
     required IconData icon,
     required String title,
@@ -96,56 +208,61 @@ class AttendanceIndexScreen extends StatelessWidget {
     required Color color,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(10),
-      onTap: onTap,
-      splashColor: color.withOpacity(0.12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(8),
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      color: Colors.white,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: 24,
+                ),
               ),
-              child: Icon(icon, size: 24, color: color),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 3),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey[700],
+              Icon(
+                Icons.chevron_right_rounded,
+                color: Colors.grey[500],
               ),
-            ),
-            const Spacer(),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Icon(Icons.arrow_forward_rounded, color: color, size: 20),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

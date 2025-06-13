@@ -21,7 +21,7 @@ class DeSuung extends StatelessWidget {
       theme: AppTheme.lightTheme,
       home: const BackgroundWrapper(child: SplashScreen()),
       routes: {
-        '/attendance': (context) => const BackgroundWrapper(child: AttendanceIndexScreen()),
+        // '/attendance': (context) => const BackgroundWrapper(child: AttendanceIndexScreen()),
         '/dashboard': (context) => const BackgroundWrapper(child: DashboardScreen()),
       },
     );

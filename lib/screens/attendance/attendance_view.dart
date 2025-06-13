@@ -82,13 +82,6 @@ class _AttendanceViewScreenState extends State<AttendanceViewScreen> {
         title: const Text('View Attendance'),
         centerTitle: true,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.calendar_month, size: 24),
-            onPressed: () => _selectDate(context),
-            tooltip: 'Select Date',
-          ),
-        ],
       ),
       body: Column(
         children: [

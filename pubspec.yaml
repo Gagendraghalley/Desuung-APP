@@ -1,5 +1,5 @@
 name: desuungapp
-description: "A new Flutter project."
+description: "This is a Mobile application for Desuung."
 
 version: 1.0.0+1
 
@@ -26,13 +26,17 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
-
   uses-material-design: true
-
   assets:
     - assets/images/
+    - assets/communityService.jpeg
+    - assets/festival.jpeg
+    - assets/health.jpeg
+    - assets/leadership.jpeg
+    - assets/tech.jpeg
+
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/icon.png" 
+  image_path: "assets/images/icon.png"
