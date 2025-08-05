@@ -1,3 +1,5 @@
+import 'package:desuungapp/screens/attendance/attendance_missing_inquiry.dart';
+import 'package:desuungapp/screens/attendance/attendance_missing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:desuungapp/screens/attendance/attendance_screen.dart';
 import 'package:desuungapp/screens/attendance/attendance_view.dart';
@@ -28,7 +30,7 @@ class AttendanceIndexScreen extends StatelessWidget {
         foregroundColor: Colors.black,
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             horizontal: isLargeScreen ? 32.0 : 20.0,
             vertical: 24.0,
@@ -36,7 +38,7 @@ class AttendanceIndexScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // **Header Section** (kept exactly as before)
+              // Header Section
               Text(
                 'Welcome!',
                 style: TextStyle(
@@ -45,7 +47,7 @@ class AttendanceIndexScreen extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 'Manage attendance with ease',
                 style: TextStyle(
@@ -53,11 +55,11 @@ class AttendanceIndexScreen extends StatelessWidget {
                   color: Colors.grey[700],
                 ),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
 
-              // NEW STATS SECTION (replacing the old cards)
-              _buildStatsSection(context),
-              SizedBox(height: 32),
+              // Hearts Status Section
+              _buildHeartsStatus(context),
+              const SizedBox(height: 32),
 
               // Quick Actions Title
               Text(
@@ -68,7 +70,7 @@ class AttendanceIndexScreen extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Action Cards
               _buildActionCard(
@@ -82,7 +84,7 @@ class AttendanceIndexScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const AttendanceScreen()),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               _buildActionCard(
                 context,
                 icon: Icons.history_rounded,
@@ -94,6 +96,31 @@ class AttendanceIndexScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const AttendanceViewScreen()),
                 ),
               ),
+              const SizedBox(height: 16),
+              _buildActionCard(
+                context,
+                icon: Icons.report_problem_rounded,
+                title: 'Submit Inquiry',
+                subtitle: 'Report attendance issues before bay ends',
+                color: const Color(0xFFFF6B6B),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AttendanceMissingInquiryScreen()),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildActionCard(
+                context,
+                icon: Icons.mark_email_unread_rounded,
+                title: 'Missed Attendance Inquiries',
+                subtitle: 'View and respond to attendance inquiries',
+                color: const Color(0xFF4CAF50),
+                  onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AttendanceMissingScreen()),
+                ),
+              ),
+              const SizedBox(height: 32),
             ],
           ),
         ),
@@ -101,8 +128,7 @@ class AttendanceIndexScreen extends StatelessWidget {
     );
   }
 
-  // NEW: Stats Section Widget
-  Widget _buildStatsSection(BuildContext context) {
+  Widget _buildHeartsStatus(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -113,37 +139,50 @@ class AttendanceIndexScreen extends StatelessWidget {
             color: Colors.grey.withOpacity(0.1),
             blurRadius: 10,
             spreadRadius: 2,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            'Hearts Status',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black87,
+            ),
+          ),
+          SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStatItem(
-                value: '24',
-                label: 'Present Days',
-                color: Colors.green,
-              ),
-              _buildStatItem(
-                value: '2',
-                label: 'Absent Days',
+              _buildHeartStatusItem(
+                icon: Icons.favorite,
                 color: Colors.red,
+                value: '85',
+                label: 'Your Hearts',
               ),
-              _buildStatItem(
-                value: '92%',
-                label: 'Attendance Rate',
+              _buildHeartStatusItem(
+                icon: Icons.people,
                 color: Colors.blue,
+                value: '92',
+                label: 'Unit Average',
+              ),
+              _buildHeartStatusItem(
+                icon: Icons.emoji_events,
+                color: Colors.amber,
+                value: '1st',
+                label: 'Rank',
               ),
             ],
           ),
           SizedBox(height: 12),
           LinearProgressIndicator(
-            value: 0.92,
+            value: 0.85,
             backgroundColor: Colors.grey[200],
-            color: Colors.green[400],
+            color: Colors.red[400],
             minHeight: 8,
             borderRadius: BorderRadius.circular(4),
           ),
@@ -152,16 +191,16 @@ class AttendanceIndexScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Monthly Progress',
+                'Heart Points Progress',
                 style: TextStyle(
                   color: Colors.grey[600],
                 ),
               ),
               Text(
-                '92%',
+                '85/100',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Colors.green[600],
+                  color: Colors.red[600],
                 ),
               ),
             ],
@@ -171,23 +210,29 @@ class AttendanceIndexScreen extends StatelessWidget {
     );
   }
 
-  // NEW: Stat Item Widget
-  Widget _buildStatItem({
+  Widget _buildHeartStatusItem({
+    required IconData icon,
+    required Color color,
     required String value,
     required String label,
-    required Color color,
   }) {
     return Column(
       children: [
+        Icon(
+          icon,
+          color: color,
+          size: 28,
+        ),
+        SizedBox(height: 4),
         Text(
           value,
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 18,
             fontWeight: FontWeight.w700,
             color: color,
           ),
         ),
-        SizedBox(height: 4),
+        SizedBox(height: 2),
         Text(
           label,
           style: TextStyle(
@@ -199,7 +244,6 @@ class AttendanceIndexScreen extends StatelessWidget {
     );
   }
 
-  // NEW: Action Card Widget
   Widget _buildActionCard(
     BuildContext context, {
     required IconData icon,

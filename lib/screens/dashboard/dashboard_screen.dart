@@ -1,3 +1,6 @@
+import 'package:desuungapp/screens/inventory/inventory_index.dart';
+import 'package:desuungapp/screens/pinManagement/pin_management_index.dart';
+import 'package:desuungapp/screens/skillsAndProgram/skilling_program_index.dart';
 import 'package:flutter/material.dart';
 import 'package:desuungapp/screens/attendance/attendance_index.dart';
 import 'package:desuungapp/screens/events/events_index.dart';
@@ -16,6 +19,8 @@ enum ActiveMenu {
   attendance,
   events,
   skillingProgram,
+  pinMangement,
+  inventoryManagement,
   announcements,
   profile,
   settings,
@@ -53,8 +58,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final Map<ActiveMenu, String> _menuTitles = {
     ActiveMenu.home: MenuName.home.value,
     ActiveMenu.attendance: "Attendance",
-    ActiveMenu.events: "Events",
+    ActiveMenu.events: "Events Management",
     ActiveMenu.skillingProgram: "Skilling Program",
+    ActiveMenu.pinMangement: "Pin Management",
+    ActiveMenu.inventoryManagement: "Inventory Management",
     ActiveMenu.announcements: "Announcements",
     ActiveMenu.profile: "Profile",
     ActiveMenu.settings: "Settings",
@@ -87,7 +94,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       title = _menuTitles[ActiveMenu.events]!;
     } else if (_activeMenu == ActiveMenu.skillingProgram) {
       title = _menuTitles[ActiveMenu.skillingProgram]!;
-    } else {
+    } else if (_activeMenu == ActiveMenu.pinMangement) {
+      title = _menuTitles[ActiveMenu.pinMangement]!;
+    } else if (_activeMenu == ActiveMenu.inventoryManagement) {
+      title = _menuTitles[ActiveMenu.inventoryManagement]!;
+    }else {
       title = _pageTitles[_currentPageIndex] ?? 'Dashboard';
     }
 
@@ -283,15 +294,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ActiveMenu.events
           ),
         ),
+        
         _buildDrawerItem(
           icon: Icons.model_training_outlined,
           activeIcon: Icons.model_training_rounded,
           text: _menuTitles[ActiveMenu.skillingProgram]!,
           isActive: _activeMenu == ActiveMenu.skillingProgram,
           onTap: () => _navigateToScreen(
-            const AttendanceScreen(), 
+            const SkillAndProgramIndex(), 
             _menuTitles[ActiveMenu.skillingProgram]!, 
             ActiveMenu.skillingProgram
+          ),
+        ),
+        _buildDrawerItem(
+          icon: Icons.push_pin_outlined,
+          activeIcon: Icons.push_pin_rounded,
+          text: _menuTitles[ActiveMenu.pinMangement]!,
+          isActive: _activeMenu == ActiveMenu.pinMangement,
+          onTap: () => _navigateToScreen(
+            const PinManagementIndex(), 
+            _menuTitles[ActiveMenu.pinMangement]!, 
+            ActiveMenu.pinMangement
+          ),
+        ),
+        _buildDrawerItem(
+          icon: Icons.inventory_outlined,
+          activeIcon: Icons.inventory_rounded,
+          text: _menuTitles[ActiveMenu.inventoryManagement]!,
+          isActive: _activeMenu == ActiveMenu.inventoryManagement,
+          onTap: () => _navigateToScreen(
+            const InventoryIndex(), 
+            _menuTitles[ActiveMenu.inventoryManagement]!, 
+            ActiveMenu.inventoryManagement
           ),
         ),
         const Divider(height: 1, indent: 20, endIndent: 20),

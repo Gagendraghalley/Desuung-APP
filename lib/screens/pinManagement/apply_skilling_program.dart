@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
-class ApplicationForm extends StatefulWidget {
-  final String eventId;
-  final String eventTitle;
+class ApplySkillingProgram extends StatefulWidget {
+  final String programId;
+  final String programTitle;
 
-  const ApplicationForm({
+  const ApplySkillingProgram({
     super.key,
-    required this.eventId,
-    required this.eventTitle,
+    required this.programId,
+    required this.programTitle,
   });
 
   @override
-  State<ApplicationForm> createState() => _ApplicationFormState();
+  State<ApplySkillingProgram> createState() => _ApplySkillingProgramState();
 }
 
-class _ApplicationFormState extends State<ApplicationForm> {
+class _ApplySkillingProgramState extends State<ApplySkillingProgram> {
   final _formKey = GlobalKey<FormState>();
   
   // Form fields
@@ -22,7 +22,9 @@ class _ApplicationFormState extends State<ApplicationForm> {
   String? _selectedGewog;
   String? _selectedVillage;
   String? _contactNumber;
-  String? _remarks;
+  String? _educationLevel;
+  String? _previousExperience;
+  String? _reasonForJoining;
   
   // Sample data for dropdowns
   final List<String> dzongkhags = [
@@ -43,13 +45,22 @@ class _ApplicationFormState extends State<ApplicationForm> {
     'Kawang': ['Kawang Babesa', 'Kawang Chari', 'Kawang Drukgyel', 'Kawang Taba'],
   };
 
+  final List<String> educationLevels = [
+    'Class VI or below',
+    'Class VII-VIII',
+    'Class IX-X',
+    'Class XI-XII',
+    'Diploma',
+    'Bachelor\'s degree or higher'
+  ];
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Application'),
+        title: const Text('Apply for Program'),
         centerTitle: true,
         elevation: 0,
       ),
@@ -60,7 +71,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Event Card
+              // Program Info Card
               Card(
                 elevation: 0,
                 shape: RoundedRectangleBorder(
@@ -77,12 +88,12 @@ class _ApplicationFormState extends State<ApplicationForm> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.event, 
+                          Icon(Icons.school_outlined, 
                               color: theme.colorScheme.primary, 
                               size: 20),
                           const SizedBox(width: 8),
                           Text(
-                            'EVENT DETAILS',
+                            'PROGRAM DETAILS',
                             style: TextStyle(
                               fontSize: 12,
                               color: theme.colorScheme.primary,
@@ -94,7 +105,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        widget.eventTitle,
+                        widget.programTitle,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
@@ -102,7 +113,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'ID: ${widget.eventId}',
+                        'ID: ${widget.programId}',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[600],
@@ -218,11 +229,52 @@ class _ApplicationFormState extends State<ApplicationForm> {
               ),
               const SizedBox(height: 20),
               
-              // Remarks
+              // Education Level
+              _buildDropdownField(
+                context: context,
+                label: 'Highest Education Level',
+                value: _educationLevel,
+                items: educationLevels,
+                onChanged: (value) {
+                  setState(() {
+                    _educationLevel = value;
+                  });
+                },
+                validator: (value) => value == null ? 'Please select your education level' : null,
+                icon: Icons.school_outlined,
+              ),
+              const SizedBox(height: 20),
+              
+              // Previous Experience
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Additional Remarks (Optional)',
-                  hintText: 'Enter any additional information',
+                  labelText: 'Previous Experience (if any)',
+                  hintText: 'Describe any relevant experience you have',
+                  prefixIcon: const Icon(Icons.work_outline),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(
+                      color: Colors.grey[400]!,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(
+                      color: Colors.grey[400]!,
+                    ),
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                ),
+                maxLines: 2,
+                onSaved: (value) => _previousExperience = value,
+              ),
+              const SizedBox(height: 20),
+              
+              // Reason for Joining
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Why do you want to join this program?',
+                  hintText: 'Explain your motivation for joining this program',
                   prefixIcon: const Icon(Icons.note_outlined),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
@@ -239,7 +291,13 @@ class _ApplicationFormState extends State<ApplicationForm> {
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
                 maxLines: 3,
-                onSaved: (value) => _remarks = value,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please explain why you want to join';
+                  }
+                  return null;
+                },
+                onSaved: (value) => _reasonForJoining = value,
               ),
               const SizedBox(height: 32),
               
@@ -323,29 +381,29 @@ class _ApplicationFormState extends State<ApplicationForm> {
             item,
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.black87,
+              color: Colors.black87,  // Ensure text is visible
             ),
           ),
         );
       }).toList(),
       onChanged: onChanged,
       validator: validator,
-      dropdownColor: Colors.white,
+      dropdownColor: Colors.white,  // Light background for dropdown items
       icon: Icon(Icons.arrow_drop_down, color: Colors.grey[700]),
       borderRadius: BorderRadius.circular(8),
       style: const TextStyle(
         fontSize: 14,
-        color: Colors.black87,
+        color: Colors.black87,  // Ensure selected value is visible
       ),
       isExpanded: true,
-      menuMaxHeight: 300,
+      menuMaxHeight: 300,  // Limit dropdown height
       selectedItemBuilder: (BuildContext context) {
         return items.map<Widget>((String item) {
           return Text(
             item,
             style: const TextStyle(
               fontSize: 14,
-              color: Colors.black87,
+              color: Colors.black87,  // Ensure selected value is visible
               fontWeight: FontWeight.w500,
             ),
           );
@@ -360,13 +418,15 @@ class _ApplicationFormState extends State<ApplicationForm> {
       
       // Process the form data
       final applicationData = {
-        'eventId': widget.eventId,
-        'eventTitle': widget.eventTitle,
+        'programId': widget.programId,
+        'programTitle': widget.programTitle,
         'dzongkhag': _selectedDzongkhag,
         'gewog': _selectedGewog,
         'village': _selectedVillage,
         'contactNumber': _contactNumber,
-        'remarks': _remarks,
+        'educationLevel': _educationLevel,
+        'previousExperience': _previousExperience,
+        'reasonForJoining': _reasonForJoining,
         'submittedAt': DateTime.now().toString(),
       };
       
@@ -392,7 +452,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
               const Text('Thank you for applying to:'),
               const SizedBox(height: 8),
               Text(
-                widget.eventTitle,
+                widget.programTitle,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -400,7 +460,7 @@ class _ApplicationFormState extends State<ApplicationForm> {
               ),
               const SizedBox(height: 16),
               const Text(
-                'We will contact you soon with more details.',
+                'We will review your application and contact you soon with further details.',
                 textAlign: TextAlign.center,
               ),
             ],

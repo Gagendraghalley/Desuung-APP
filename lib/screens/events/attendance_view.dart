@@ -1,14 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AttendanceScreen extends StatefulWidget {
-  const AttendanceScreen({super.key});
+class AttendanceRecord {
+  final DateTime date;
+  final String studentId;
+  final String status;
+  final String event;
 
-  @override
-  State<AttendanceScreen> createState() => _AttendanceScreenState();
+  AttendanceRecord({
+    required this.date,
+    required this.studentId,
+    required this.status,
+    required this.event,
+  });
 }
 
-class _AttendanceScreenState extends State<AttendanceScreen> {
+class Student {
+  final String id;
+  final String name;
+  final List<String> events;
+  final String rollNumber;
+  final String? profileImage;
+
+  Student({
+    required this.id,
+    required this.name,
+    required this.events,
+    required this.rollNumber,
+    this.profileImage,
+  });
+}
+
+class AttendanceViewScreen extends StatefulWidget {
+  const AttendanceViewScreen({super.key});
+
+  @override
+  State<AttendanceViewScreen> createState() => _AttendanceViewScreenState();
+}
+
+class _AttendanceViewScreenState extends State<AttendanceViewScreen> {
   DateTime _selectedDate = DateTime.now();
   String _selectedEvent = 'National Day Duty';
   bool _isLoading = false;
@@ -16,31 +46,40 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   final List<String> _events = [
     'National Day Duty',
     'December 17th'
-    
   ];
   
+  // This would normally come from your database/API
+  final List<AttendanceRecord> _attendanceRecords = [
+    AttendanceRecord(
+      date: DateTime.now(),
+      studentId: '1',
+      status: 'Present',
+      event: 'National Day Duty',
+    ),
+    AttendanceRecord(
+      date: DateTime.now(),
+      studentId: '2',
+      status: 'Present',
+      event: 'National Day Duty',
+    ),
+    // Add more sample records as needed
+  ];
+
   final List<Student> _allStudents = [
     Student(id: '1', name: 'Desuung one', events: ['National Day Duty'], rollNumber: 'ST001'),
     Student(id: '2', name: 'Desuung two', events: ['National Day Duty'], rollNumber: 'ST002'),
-    Student(id: '3', name: 'Desuung three', events: ['December 17th'], rollNumber: 'ST003'),
-    Student(id: '4', name: 'Desuung four', events: ['National Day Duty'], rollNumber: 'ST004'),
-    Student(id: '5', name: 'Desuung five', events: ['National Day Duty'], rollNumber: 'ST005'),
-    Student(id: '6', name: 'Desuung six', events: ['National Day Duty'], rollNumber: 'ST006'),
-    Student(id: '7', name: 'Desuung seven', events: ['December 17th'], rollNumber: 'ST007'),
-    Student(id: '8', name: 'Desuung eight', events: ['National Day Duty'], rollNumber: 'ST008'),
+    // Include all your students
   ];
 
   List<Student> get _filteredStudents {
     return _allStudents.where((student) => student.events.contains(_selectedEvent)).toList();
   }
 
-  final List<AttendanceRecord> _attendanceRecords = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Event Attendance'),
+        title: const Text('View Attendance'),
         centerTitle: true,
         elevation: 0,
       ),
@@ -57,7 +96,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           ),
         ],
       ),
-      floatingActionButton: _buildSaveButton(),
     );
   }
 
@@ -174,16 +212,11 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   }
 
   Widget _buildSummaryCard() {
-    final presentCount = _filteredStudents.where((student) {
-      try {
-        return _attendanceRecords.firstWhere(
-          (record) => record.studentId == student.id && 
-                    _isSameDay(record.date, _selectedDate),
-        ).status == 'Present';
-      } catch (e) {
-        return true; // Default is present
-      }
-    }).length;
+    final presentCount = _attendanceRecords.where((record) =>
+      record.status == 'Present' &&
+      record.event == _selectedEvent &&
+      _isSameDay(record.date, _selectedDate)
+    ).length;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -205,8 +238,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildSummaryItem('Total', _filteredStudents.length.toString(), Icons.people_alt, Colors.blue),
-              _buildSummaryItem('Present', presentCount.toString(), Icons.check_circle, Colors.green),
+              _buildSummaryItem('Total', _filteredStudents.length.toString(), 
+                Icons.people_alt, Colors.blue),
+              _buildSummaryItem('Present', presentCount.toString(), 
+                Icons.check_circle, Colors.green),
               _buildSummaryItem('Absent', (_filteredStudents.length - presentCount).toString(), 
                 Icons.cancel, Colors.red),
             ],
@@ -262,7 +297,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           child: Row(
             children: [
               Text(
-                'Participants (${_filteredStudents.length})',
+                'Attendance Records (${_filteredStudents.length})',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
@@ -279,11 +314,23 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         ),
         Expanded(
           child: ListView.separated(
-            padding: const EdgeInsets.only(bottom: 80),
+            padding: const EdgeInsets.only(bottom: 20),
             itemCount: _filteredStudents.length,
             separatorBuilder: (context, index) => const Divider(height: 1, indent: 72),
             itemBuilder: (context, index) {
-              return _buildStudentAttendanceCard(_filteredStudents[index]);
+              final student = _filteredStudents[index];
+              final record = _attendanceRecords.firstWhere(
+                (r) => r.studentId == student.id && 
+                      r.event == _selectedEvent &&
+                      _isSameDay(r.date, _selectedDate),
+                orElse: () => AttendanceRecord(
+                  date: _selectedDate,
+                  studentId: student.id,
+                  status: 'Absent',
+                  event: _selectedEvent,
+                ),
+              );
+              return _buildStudentRecordCard(student, record);
             },
           ),
         ),
@@ -291,9 +338,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
   }
 
-  Widget _buildStudentAttendanceCard(Student student) {
-    String currentStatus = _getAttendanceStatus(student.id);
-    Color statusColor = _getStatusColor(currentStatus);
+  Widget _buildStudentRecordCard(Student student, AttendanceRecord record) {
+    Color statusColor = _getStatusColor(record.status);
 
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -327,76 +373,18 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         'ID: ${student.rollNumber}',
         style: TextStyle(color: Colors.grey.shade600),
       ),
-      trailing: _buildStatusDropdown(student, currentStatus, statusColor),
-    );
-  }
-
-  Widget _buildStatusDropdown(Student student, String currentStatus, Color statusColor) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: statusColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: statusColor.withOpacity(0.3)),
-      ),
-      child: DropdownButton<String>(
-        value: currentStatus,
-        underline: Container(),
-        icon: Icon(Icons.arrow_drop_down, color: statusColor),
-        style: TextStyle(
-          fontSize: 14,
-          color: statusColor,
-          fontWeight: FontWeight.w500,
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: statusColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: statusColor.withOpacity(0.3)),
         ),
-        dropdownColor: Colors.white,
-        items: const [
-          DropdownMenuItem(
-            value: 'Present',
-            child: Text('Present'),
-          ),
-          DropdownMenuItem(
-            value: 'Absent',
-            child: Text('Absent'),
-          ),
-        ],
-        onChanged: (String? newValue) {
-          if (newValue != null) {
-            _updateAttendance(student.id, newValue);
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildSaveButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: _saveAttendance,
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.blue.shade700,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            elevation: 2,
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.save, size: 20, color: Colors.white),
-              SizedBox(width: 8),
-              Text(
-                'SAVE ATTENDANCE',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ],
+        child: Text(
+          record.status,
+          style: TextStyle(
+            color: statusColor,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
@@ -408,10 +396,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.event_available, size: 60, color: Colors.grey.shade400),
+          Icon(Icons.event_busy, size: 60, color: Colors.grey.shade400),
           const SizedBox(height: 16),
           const Text(
-            'No participants for this event',
+            'No attendance records found',
             style: TextStyle(
               fontSize: 18,
               color: Colors.grey,
@@ -435,7 +423,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Search Participant'),
+          title: const Text('Search Records'),
           content: TextField(
             decoration: InputDecoration(
               hintText: 'Enter name or ID',
@@ -444,9 +432,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-            onChanged: (value) {
-              // Implement search functionality
-            },
           ),
           actions: [
             TextButton(
@@ -454,10 +439,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
-                // Implement search
-                Navigator.pop(context);
-              },
+              onPressed: () => Navigator.pop(context),
               child: const Text('Search'),
             ),
           ],
@@ -470,22 +452,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Theme.of(context).primaryColor,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
-            ),
-            dialogBackgroundColor: Colors.white,
-          ),
-          child: child!,
-        );
-      },
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != _selectedDate) {
       setState(() {
@@ -494,103 +462,13 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     }
   }
 
-  String _getAttendanceStatus(String studentId) {
-    try {
-      return _attendanceRecords.firstWhere(
-        (record) => record.studentId == studentId && 
-                  _isSameDay(record.date, _selectedDate),
-      ).status;
-    } catch (e) {
-      return 'Present'; // Default status
-    }
-  }
-
   Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Present':
-        return Colors.green;
-      default:
-        return Colors.red;
-    }
+    return status == 'Present' ? Colors.green : Colors.red;
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
+           date1.month == date2.month &&
+           date1.day == date2.day;
   }
-
-  void _updateAttendance(String studentId, String newStatus) {
-    setState(() {
-      _attendanceRecords.removeWhere(
-        (record) => record.studentId == studentId && 
-                  _isSameDay(record.date, _selectedDate),
-      );
-
-      _attendanceRecords.add(AttendanceRecord(
-        date: _selectedDate,
-        studentId: studentId,
-        status: newStatus,
-      ));
-    });
-  }
-
-  Future<void> _saveAttendance() async {
-    setState(() => _isLoading = true);
-    
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 1));
-    
-    setState(() => _isLoading = false);
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Attendance saved for $_selectedEvent',
-          style: const TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        duration: const Duration(seconds: 2),
-        action: SnackBarAction(
-          label: 'View',
-          textColor: Colors.white,
-          onPressed: () {
-            // Navigate to attendance report
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class Student {
-  final String id;
-  final String name;
-  final List<String> events;
-  final String? profileImage;
-  final String rollNumber;
-
-  Student({
-    required this.id,
-    required this.name,
-    required this.events,
-    this.profileImage,
-    required this.rollNumber,
-  });
-}
-
-class AttendanceRecord {
-  final DateTime date;
-  final String studentId;
-  final String status;
-
-  AttendanceRecord({
-    required this.date,
-    required this.studentId,
-    required this.status,
-  });
 }

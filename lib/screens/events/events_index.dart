@@ -124,7 +124,7 @@ class _EventsIndexState extends State<EventsIndex> {
           IconButton(
             icon: Icon(Icons.filter_alt),
             style: IconButton.styleFrom(
-              foregroundColor: Color.fromARGB(255, 235, 160, 80),
+              foregroundColor: Color.fromARGB(255, 11, 11, 11),
             ),
             onPressed: () {
               _showFilterDialog(context);
@@ -169,20 +169,48 @@ class _EventsIndexState extends State<EventsIndex> {
                   if (_selectedCategory != 'All')
                     Chip(
                       label: Text(_selectedCategory),
+                      deleteIcon: const Icon(Icons.close, size: 16),
                       onDeleted: () {
                         setState(() {
                           _selectedCategory = 'All';
                         });
                       },
+                      backgroundColor: _getCategoryColor(_selectedCategory).withOpacity(0.2),
+                      labelStyle: TextStyle(
+                        color: _getCategoryColor(_selectedCategory),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: _getCategoryColor(_selectedCategory),
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                  if (_selectedStatus != 'All')
+                  if (_selectedStatus != 'Upcoming')
                     Chip(
                       label: Text(_selectedStatus),
+                      deleteIcon: const Icon(Icons.close, size: 16),
                       onDeleted: () {
                         setState(() {
                           _selectedStatus = 'Upcoming';
                         });
                       },
+                      backgroundColor: _selectedStatus == 'Upcoming'
+                          ? Colors.green[50]
+                          : Colors.grey[200],
+                      labelStyle: TextStyle(
+                        color: _selectedStatus == 'Upcoming'
+                            ? Colors.green[800]
+                            : Colors.grey[800],
+                      ),
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: _selectedStatus == 'Upcoming'
+                              ? Colors.green
+                              : Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                 ],
               ),
@@ -390,76 +418,161 @@ class _EventsIndexState extends State<EventsIndex> {
   }
 
   void _showFilterDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Filter Events'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Category Filter
-              DropdownButtonFormField<String>(
-                value: _selectedCategory,
-                items: categories.map((category) {
-                  return DropdownMenuItem(
-                    value: category,
-                    child: Text(category),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCategory = value!;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Category',
-                  border: OutlineInputBorder(),
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setModalState) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: SizedBox(
+                    width: 40,
+                    child: Divider(thickness: 3, height: 24),
+                  ),
                 ),
-              ),
-              SizedBox(height: 16),
-              
-              // Status Filter
-              DropdownButtonFormField<String>(
-                value: _selectedStatus,
-                items: ['Upcoming', 'Past', 'All'].map((status) {
-                  return DropdownMenuItem(
-                    value: status,
-                    child: Text(status),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedStatus = value!;
-                  });
-                },
-                decoration: InputDecoration(
-                  labelText: 'Status',
-                  border: OutlineInputBorder(),
+                const Text(
+                  'Filter Events',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _selectedCategory = 'All';
-                _selectedStatus = 'Upcoming';
-              });
-              Navigator.pop(context);
-            },
-            child: Text('Reset'),
-          ),
-        ],
-      ),
-    );
-  }
+                const SizedBox(height: 16),
+                
+                // Category Filter
+                const Text(
+                  'Category',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: categories.map((category) {
+                    final isSelected = _selectedCategory == category;
+                    return FilterChip(
+                      label: Text(category),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        setModalState(() {
+                          _selectedCategory = selected ? category : 'All';
+                        });
+                      },
+                      backgroundColor: Colors.white,
+                      selectedColor: _getCategoryColor(category).withOpacity(0.2),
+                      checkmarkColor: _getCategoryColor(category),
+                      labelStyle: TextStyle(
+                        color: isSelected ? _getCategoryColor(category) : Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(
+                          color: isSelected 
+                              ? _getCategoryColor(category)
+                              : Colors.grey[300]!,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                
+                const SizedBox(height: 16),
+                
+                // Status Filter
+                const Text(
+                  'Status',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: ['Upcoming', 'Past', 'All'].map((status) {
+                    final isSelected = _selectedStatus == status;
+                    return FilterChip(
+                      label: Text(status),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        setModalState(() {
+                          _selectedStatus = selected ? status : 'Upcoming';
+                        });
+                      },
+                      backgroundColor: Colors.white,
+                      selectedColor: status == 'Upcoming' 
+                          ? Colors.green[50]
+                          : Colors.grey[200],
+                      checkmarkColor: status == 'Upcoming' 
+                          ? Colors.green
+                          : Colors.grey,
+                      labelStyle: TextStyle(
+                        color: isSelected 
+                            ? status == 'Upcoming'
+                                ? Colors.green[800]
+                                : Colors.grey[800]
+                            : Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        side: BorderSide(
+                          color: isSelected 
+                              ? status == 'Upcoming'
+                                  ? Colors.green
+                                  : Colors.grey
+                              : Colors.grey[300]!,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Apply Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFEBA050),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text('Apply Filters'),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
 
   void _showEventDetails(BuildContext context, Map<String, dynamic> event) {
     showDialog(
